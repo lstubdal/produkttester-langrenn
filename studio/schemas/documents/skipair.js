@@ -1,22 +1,22 @@
 export default {
     title: 'Skipar',
-    name: 'skipar',
+    name: 'skipair',
     type: 'document',
     fields: [
         {
             title: 'Nummer',
-            name: 'nummer',
+            name: 'number',
             type: 'number'
         },
         {
             title: 'Produkt',
-            name: 'produkt',
+            name: 'product',
             description: 'Skriv inn produkt brukt under testingen',
             type: 'string',
         },
         {
             title: 'Resultat',
-            name: 'resultat',
+            name: 'result',
             description: 'Skriv inn resultatet fra testingen, regnet ut fra verdi til beste skipar (tall verdi)',
             type: 'number',
         },

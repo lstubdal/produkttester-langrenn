@@ -1,4 +1,7 @@
-import antallSkipar from "./antallSkipar" // import dropdown list of number of skipairs
+/* 
+    Test.js is developed for users to add tests from previous years, and or to add the current test if system not used during testing.
+*/
+import numberOfSkipairs from "./numberOfSkipairs" // import dropdown list of number of skipairs
 
 export default {
     title: "Tester",
@@ -7,21 +10,21 @@ export default {
     fields: [
         {
             title: 'Testnavn',
-            name: 'testnavn',
+            name: 'name',
             type: 'string',
-            description: 'Skriv inn navn på test',
+            description: 'Skriv inn navn på test eller skirenn',
             validation: Rule => Rule.required().min(1).error('Mangler navn på test!')
         },
         {
             title: 'Sted',
-            name: 'sted',
+            name: 'place',
             type: 'string',
             description: 'Skriv inn sted på test',
             validation: Rule => Rule.required().min(1).error('Må fylle inn sted')
         },
         {
             title: 'Dato',
-            name: 'dato',
+            name: 'date',
             type: 'date',
             description: 'Fyll inn dato testen gjennomføres',
             options: {
@@ -30,8 +33,8 @@ export default {
             validation: Rule => Rule.required().error('Mangler dato')
         },
         {
-            title: 'Temperatur',
-            name: 'temperatur',
+            title: 'Temperatur (værdata)',
+            name: 'temperature',
             type: 'number',
             description: 'Måles i celsius',
             validation: [
@@ -40,83 +43,84 @@ export default {
             ]
         },
         {
-            title: 'Værdata',
-            name: 'vaerdata',
-            type: 'number',
-            description: 'Måles i celsius',
-            validation: [
-                Rule => Rule.required().error('Mangler værdata'),
-                Rule => Rule.precision(1).error('Kun ett desimal bak graden')
-            ]
-        },
-        {
             title: 'Snødata',
-            name: 'snoedata',
+            name: 'snowdata',
             type: 'object',
-            description: 'Check av for type test',
+            description: 'Velg type test',
             fields: [
                 {
                     title: 'Klassisk',
-                    name: 'klassisk',
+                    name: 'classic',
                     type: 'boolean',
-                    hidden: ({ parent, boolean }) => !boolean && parent?.skoeyting || parent?.skibytte  //hide field if testtype === 'skoeyte or skibytte'
+                    hidden: ({ parent, boolean }) => !boolean && parent?.skating || parent?.skichange  //hide field if testtype === 'skoeyte or skichange'
                  
                 },
                 {
                     title: 'Skøyting',
-                    name: 'skoeyting',
+                    name: 'skating',
                     type: 'boolean',
-                    hidden: ({ parent, boolean }) => !boolean && parent?.klassisk || parent?.skibytte
+                    initialValue: {
+                        featured: true
+                      },
+                    hidden: ({ parent, boolean }) => !boolean && parent?.classic || parent?.skichange
                     
                 },
                 {
                     title: 'Skibytte',
-                    name: 'skibytte',
+                    name: 'skichange',
                     type: 'boolean',
-                    hidden: ({ parent, boolean }) => !boolean && parent?.skoeyting || parent?.klassisk
+                    hidden: ({ parent, boolean }) => !boolean && parent?.skating || parent?.classic
                 },
                 {
                     title: 'I spor',
-                    name: 'ispor',
+                    name: 'inTrack',
                     type: 'string',
                     description: 'Eksempel format: 25%-29%',
-                    hidden: ({ parent, boolean }) => !boolean && parent?.skoeyting || parent?.skoeyting === false && parent?.skibytte === false && parent?.klassisk === false //hide if testtype === 'skoeyting', or if no types selected
+                    hidden: ({ parent, boolean }) => !boolean && parent?.skating || parent?.skating === false && parent?.skichange === false && parent?.classic === false //hide if testtype === 'skating', or if no types selected
                 },
                 {
                     title: 'Utenfor spor',
-                    name: 'uspor',
+                    name: 'outsideTrack',
                     type: 'string',
                     description: 'Eksempel format: 25%-29%',
-                    hidden: ({ parent, boolean }) => !boolean && parent?.klassisk || parent?.skoeyting === false && parent?.skibytte === false && parent?.klassisk === false //hide if testtype === 'klassisk, or if no types selected
+                    hidden: ({ parent, boolean }) => !boolean && parent?.classic || parent?.skating === false && parent?.skichange === false && parent?.classic === false //hide if testtype === 'classic, or if no types selected
                 }
             ],
         },
         {
             title: 'Hvor mange skipar ble testet?',
-            name: 'antallParTeste',
+            name: 'numberOfPairs',
             type: 'number',
             options: {
                 list: [
-                    ...antallSkipar
+                    ...numberOfSkipairs
                 ]
             }
         },
         {
-            title: 'Legg inn skipar',/* fix : `Legg inn ${parent.valueOfField('antallSkipar')} skipar`, */
-            name: 'leggInnSki',
+            title: 'Legg inn alle skipar',
+            name: 'addSkis',
             description: 'Fyll inn verdi/smøring på skiparene',
             type: 'array',
             of: [{
                 type: 'reference',
-                to: [{ type: 'skipar' }] 
+                to: [{ type: 'skipair' }] 
             }],
             
-            // allows user to sort pair if wanted
-            options: { 
-                sortable: true
-            },
             valdiation: Rule => Rule.Required().length(Rule.valueOfField('antallParTeste')) // reqired same number of items as number of skipairs selected
             // fungerer ikke
+        },
+        {
+            title: 'Slug',
+            name: 'slug',
+            type: 'slug',
+            options: {
+                source: 'navn',
+                slugify: input => input
+                         .toLowerCase()
+                         .replace(/\s+/g, '-')
+                         .slice(0, 200)
+            }
         }
     ]
 }
