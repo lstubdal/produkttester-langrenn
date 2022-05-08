@@ -82,8 +82,11 @@
 
 <script>
     import Header from '../components/Header.vue';
+    import viewMixin from '../mixins/viewMixin.js'
 
     export default {
+        mixins: [viewMixin],
+
         data() {
             return {
                 name: '',
@@ -115,6 +118,12 @@
                 return this.skiType;
             },
 
+            checkTestType() {
+                if (this.selectedTestType === 'Klassisk' || this.selectedTestType === 'Skøyting' || this.selectedTestType === 'Skibytte' ) {
+                    return true;
+                } return false
+            }
+
             /* testname() {
                 return this.$store.getters.getTestname;
             } */
@@ -138,24 +147,43 @@
 
             getTestType(event) {
                 this.selectedTestType = event.target.value;
-                console.log('event', event.target.checked);
-                console.log('computed', this.selectedTestType);
+                /* console.log('event', event.target.checked);
+                console.log('computed', this.selectedTestType); */
             },
 
             createSnowDataObject() {
+                console.log('selected testtype', this.selectedTestType);
+                console.log('type of snowdata', typeof this.snowdata);
+
                 this.snowdata = {
-                    type: this.selectedTestType,
-                    track: {
-                        inTrack: this.selectedTestType === 'skøyting' ? '-' : this.inTrack,
-                        outisdeTrack: this.selectedTestType === 'klassisk' ? '-' : this.outsideTrack
-                    }
-                }
+                    classic: this.selectedTestType === 'Klassisk' ? true : false,
+                    inTrack: this.selectedTestType === 'Klassisk' ||  this.selectedTestType === 'Skibytte' ? this.inTrack : '',
+                    outsideTrack: this.selectedTestType === 'Skøyting' || this.selectedTestType === 'Skibytte' ? this.outsideTrack : '',
+                    skating: this.selectedTestType === 'Skøyting' ? true : false,
+                    skichange: this.selectedTestType === 'Skibytte' ? true :  false
+                }    
             },
 
-
-            /*  psuhe data til store på ett vis */
             waxTechDone() {
+
                 this.createSnowDataObject();
+                console.log('snowdata', this.snowdata)
+
+                const parsedTemp = parseInt(this.temperature)
+                const parsedNumber = parseInt(this.numberOfSkipairs)
+                /* create document to sanity */
+
+                this.createNewTest(
+                    this.name, 
+                    this.place, 
+                    this.date,
+                    parsedTemp,
+                    this.snowdata
+                    //parsedNumber
+                );
+
+                
+                /* this.createSnowDataObject();
                 console.log('snowdata', this.snowdata)
                 this.$store.dispatch('updateWaxTechStatus');
 
@@ -169,22 +197,9 @@
                     temperature: this.temperature,
                     snowdata: this.snowdata,
                     skipairs: this.addedSkiPairs
-                })
+                }) _______________*/
 
-                /* const newTest = {
-                    name: this.name,
-                    place: this.place,
-                    date: this.date,
-                    temperature: this.temperature,
-                    addSkis: this.addedSkiPairs,
-                    snowdata: {
-                        type: this.getTestType,
-                        inTrack: this.inTrack !== null ? this.inTrack : '',
-                        outsideTrack: this.inTrack !== null ? this.inTrack : '',
-                    },
-                    slug: '',
-                }
-                console.log('NEW TEST OBJECT', newTest); */
+
             }
         }
     }
