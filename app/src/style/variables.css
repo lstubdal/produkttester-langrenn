@@ -1,0 +1,27 @@
+:root {
+
+    /* colors */
+    --main-color: #1A0E67;
+    --second-color: #7B0303;
+    --highlight: #3BA222;
+    --dark: black;
+    --light: white;
+
+    /* font-size */
+
+
+    /* padding */
+    --padding-small: 10px;
+    --padding-medium: 20px;
+    --padding-large: 50px;
+
+    /* margin */
+    --margin-small: 10px;
+    --margin-medium: 20px;
+    --margin-large: 50px;
+
+    /* buttons */
+    --button-corners: 2px;
+    --button-border: 2px;
+    --button-text: 1.2em;
+}

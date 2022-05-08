@@ -1,6 +1,6 @@
 <template>
     <div v-if="loading"> LOADING DATA </div>
-    <div v-else v-for="test in tests">{{ test }}</div>
+    <div v-else v-for="test in tests">{{ test.name }}</div>
 </template>
 
 <script>

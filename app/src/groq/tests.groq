@@ -1,0 +1,18 @@
+*[_type == 'test'] | order(name asc){
+    name, 
+    place,
+    date,
+    temperature,
+    snowdata,
+    
+    addSkis[]-> {
+        number,
+        product,
+        result,
+        ranking
+    },
+
+    slug {
+        current
+    }
+}
