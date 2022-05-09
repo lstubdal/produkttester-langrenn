@@ -1,0 +1,9 @@
+*[_type == 'test'][0] {
+    _id,
+    date,
+    name,
+    place,
+    snowdata,
+    temperature,
+    addedSkipairs
+}
