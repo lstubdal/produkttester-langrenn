@@ -102,11 +102,35 @@ export default {
             name: 'addSkis',
             description: 'Fyll inn verdi/smøring på skiparene',
             type: 'array',
-            of: [{
-                type: 'reference',
-                to: [{ type: 'skipair' }] 
-            }],
-            
+            of: [
+                {
+                    title: 'Skipar',
+                    name: 'skipair',
+                    type: 'object',
+                    fields: [
+                        {
+                            title: 'Produkt',
+                            name: 'product',
+                            type: 'string'
+                        },
+                        {
+                            title: 'Resultat (verdi)',
+                            name: 'result',
+                            type: 'number'
+                        },
+                        {
+                            title: 'Ranking',
+                            name: 'ranking',
+                            type: 'number'
+                        }
+                    ]
+
+                }
+            ],
+           /*  of: [{ type: 'object'}], */
+           
+
+
             valdiation: Rule => Rule.Required().length(Rule.valueOfField('antallParTeste')) // reqired same number of items as number of skipairs selected
             // fungerer ikke
         },
