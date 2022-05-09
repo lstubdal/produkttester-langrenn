@@ -49,27 +49,11 @@
 
         <!-- ADD SKIPARIS -->
         <section class="addSkipairs">
-            <h2>LEGG INN SKI </h2>
-            <div class="addSkipairs__number">
-                <label for="numberOfSkipairs">Hvor mange skipar skal testes?</label>
-        
-                <select name="numberOfSkipairs" id="addSkis" @change="getNumberOfPairs">
-                    <option value="selectPlaceholder">Velg antall</option>
-                    <option :value="number" v-for="number in selectNumberOfPairs">{{ number }}</option>
-                </select>
-            </div>
-
-            <div class="addSkipairs__user">
-                <div v-if="numberOfSkipairs !== ''" class="addSkipairs__user-title">
-                    <p>Nr.</p>
-                    <p>Produkt</p>
-                </div>
-                
-                <div class="pairs" v-for='index in numberOfSkipairs' :key='index'>
-                    <div class="pair">
-                        <label for="nr">{{ index }}</label>
-                        <input type="text" id="nr" name="pair" v-model="addedSkiPairs[index-1]" placeholder="Skriv inn produkt">
-                    </div>
+            <h2>SKIPAR FOR TESTING</h2>
+            <div class="pairs" v-for='index in 8' :key='index'>
+                <div class="pair">
+                    <label for="nr">{{ index }}</label>
+                    <input type="text" id="nr" name="pair" v-model="products[index-1]" placeholder="Skriv inn produkt">
                 </div>
             </div>
         </section>
@@ -94,14 +78,13 @@
                 date: '',
                 temperature: '',
                 skiTypes: ['Klassisk', 'Skøyting', 'Skibytte'],
-                selectNumberOfPairs: [2,3,4,5,6,7,8,9,10,11,12],
-                numberOfSkipairs: '',
                 selectedTestType: '',
                 inTrack: '',
                 outsideTrack: '',
-                addedSkiPairs: [], // collect added pair of skis in array
+                products: [], // collect skiproducts
                 snowdata: '',
-                testArray: ['tomato', 'potato']
+                clicked: false,
+                totalSkiPairs: 8 // fix to dynamic value
             }
         },
 
@@ -110,10 +93,6 @@
         },
 
         computed: {
-            /* numberOfSkipairs() {
-                return this.$store.getters.getNumberOfSkipairs
-            }, */
-
             skiType() {
                 return this.skiType;
             },
@@ -123,83 +102,65 @@
                     return true;
                 } return false
             }
-
-            /* testname() {
-                return this.$store.getters.getTestname;
-            } */
         },
 
         methods: {
             getNumberOfPairs(event) {
-                const parsedNumberValue = parseInt(event.target.value) // parse from string to number
+                const parsedNumberValue = parseInt(event.target.value) //parse from string to number
                 this.numberOfSkipairs = parsedNumberValue;
-                /* this.$store.dispatch('updateNumberOfSkipairs', ); */ // push value to store in order to use it in the next field
-
-                console.log('name', this.name)
-                console.log('place', this.place)
-                console.log('date', this.date)
-                console.log('temp', this.temperature)
-                console.log('selected skitype', this.selectedTestType);
-                console.log('intrack', this.inTrack)
-                console.log('outside track', this.outsideTrack);
-                console.log(this.addedSkiPairs);
             },
 
             getTestType(event) {
                 this.selectedTestType = event.target.value;
-                /* console.log('event', event.target.checked);
-                console.log('computed', this.selectedTestType); */
             },
 
             createSnowDataObject() {
-                console.log('selected testtype', this.selectedTestType);
-                console.log('type of snowdata', typeof this.snowdata);
-
-                this.snowdata = {
+                const snowdata = {
                     classic: this.selectedTestType === 'Klassisk' ? true : false,
                     inTrack: this.selectedTestType === 'Klassisk' ||  this.selectedTestType === 'Skibytte' ? this.inTrack : '',
                     outsideTrack: this.selectedTestType === 'Skøyting' || this.selectedTestType === 'Skibytte' ? this.outsideTrack : '',
                     skating: this.selectedTestType === 'Skøyting' ? true : false,
                     skichange: this.selectedTestType === 'Skibytte' ? true :  false
-                }    
+                }
+                return snowdata; 
+            },
+
+            generateRandomKey() {
+                let key = ''
+                const char = 'abcdefghijklmnopqrstuvwxyz0123456789'
+
+                for (let index = 0; index < 7; index++) {
+                    key += char.charAt(Math.floor(Math.random) *  7)
+                }
+
+                return key
+            },
+
+            createSkipairObjects() {
+                const addedSkipairs =  []
+                this.products.forEach(product => {
+                   const skipairWithProduct = {
+                       product: product, // ...product ?
+                       result: 0,
+                       _key: this.generateRandomKey()
+                   }
+                   addedSkipairs.push(skipairWithProduct)
+                });
+                return addedSkipairs
             },
 
             waxTechDone() {
+                const parsedTemp = parseInt(this.temperature) /* parse strings to numbers */
 
-                this.createSnowDataObject();
-                console.log('snowdata', this.snowdata)
-
-                const parsedTemp = parseInt(this.temperature)
-                const parsedNumber = parseInt(this.numberOfSkipairs)
-                /* create document to sanity */
-
+                /* create new test document to sanity */
                 this.createNewTest(
                     this.name, 
                     this.place, 
                     this.date,
                     parsedTemp,
-                    this.snowdata
-                    //parsedNumber
+                    this.createSnowDataObject(),
+                    this.createSkipairObjects()
                 );
-
-                
-                /* this.createSnowDataObject();
-                console.log('snowdata', this.snowdata)
-                this.$store.dispatch('updateWaxTechStatus');
-
-                console.log('added skipairs', this.addedSkiPairs);
-                console.log('added skipairs length', this.addedSkiPairs.length);
-                
-                this.$store.dispatch('updateNewTestData', {
-                    name: this.name,
-                    place: this.place,
-                    date: this.date,
-                    temperature: this.temperature,
-                    snowdata: this.snowdata,
-                    skipairs: this.addedSkiPairs
-                }) _______________*/
-
-
             }
         }
     }
