@@ -14,7 +14,7 @@ export default {
             this.loading = false;
         },
 
-        createNewTest(name, place, date, temperature, snowdata, numberOfpairs, addedSkipairs) {
+        createNewTest(name, place, date, temperature, snowdata, numberOfpairs, addedSkipairs, slug) {
             const newTest = {
                 _type: 'test',
                 name: name,
@@ -23,7 +23,10 @@ export default {
                 temperature: temperature,
                 snowdata: snowdata,
                 numberOfPairs: numberOfpairs,
-                addedSkipairs: addedSkipairs
+                addedSkipairs: addedSkipairs,
+                slug: {
+                    current: slug
+                }
             }
 
             /* OBS! REMEBER TO CHECK IF NOT EXIST */

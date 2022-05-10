@@ -84,6 +84,7 @@
             </div>
         </section>
          -->
+         <button @click="createSlug">slug</button>
         <RouterLink :to="{ name: 'tester'}">
             <button @click="createTestSanity">FERDIG</button>
         </RouterLink>
@@ -112,7 +113,6 @@
                 snowdata: '',
                 clicked: false,
                 numberOfpairs: ''
-               
             }
         },
 
@@ -180,18 +180,27 @@
                 return addedSkipairs
             },
 
-            createTestSanity() {
-                const parsedNumber = parseInt(this.numberOfpairs);
+            createSlug() {
+                const slug = this.name.replace(' ', '-');
+                return slug.toLowerCase();
+            },
 
-                /* create new test document to sanity */
+            getParsedNumberOfPairs() {
+                const parsedNumber = parseInt(this.numberOfpairs)
+                return parsedNumber
+            },
+
+            createTestSanity() {
+                /* create new testdocument to sanity */
                 this.createNewTest(
                     this.name, 
                     this.place, 
                     this.date,
                     this.getTemperature(),
                     this.createSnowDataObject(),
-                    parsedNumber,
-                    this.createSkipairObjects()
+                    this.numberOfpairs,
+                    this.createSkipairObjects(),
+                    this.createSlug()
                 );
             }
         }
