@@ -1,7 +1,7 @@
 /* 
     Test.js is developed for users to add tests from previous years, and or to add the current test if system not used during testing.
 */
-import numberOfSkipairs from "./numberOfSkipairs" // import dropdown list of number of skipairs
+import numberOfSkipairs from "./numberOfSkipairs"
 
 export default {
     title: "Tester",
@@ -99,7 +99,7 @@ export default {
         },
         {
             title: 'Legg inn alle skipar',
-            name: 'addSkis',
+            name: 'addedSkipairs',
             description: 'Fyll inn verdi/smøring på skiparene',
             type: 'array',
             of: [
@@ -114,25 +114,14 @@ export default {
                             type: 'string'
                         },
                         {
-                            title: 'Resultat (verdi)',
+                            title: 'Resultat (differanse)',
                             name: 'result',
-                            type: 'number'
-                        },
-                        {
-                            title: 'Ranking',
-                            name: 'ranking',
                             type: 'number'
                         }
                     ]
 
                 }
             ],
-           /*  of: [{ type: 'object'}], */
-           
-
-
-            valdiation: Rule => Rule.Required().length(Rule.valueOfField('antallParTeste')) // reqired same number of items as number of skipairs selected
-            // fungerer ikke
         },
         {
             title: 'Slug',

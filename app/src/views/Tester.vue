@@ -8,26 +8,12 @@
           <span>{{ test.place }}</span>
         </div>
 
-        <h2>{{ test.name }}</h2>
+         <h2>{{ test.name }}</h2>
 
-        <span>{{ test.temperature }} Celsius</span>
+        <span>{{ test.temperature }} Celsius</span> 
     </section>
 
-    <section class="tester__skipairs">
-      <div class="tester__skipairs-title">
-        <span>Nr</span>
-        <span>Verdi</span>
-      </div>
-
-      <div class="tester__input">
-        <div v-for="index in test.addedSkipairs.length-1">
-          <span>Nr. {{ index }}</span>
-          <input type="text" placeholder="Skriv inn resultat">
-        </div>
-
-        <button @click="temporarySkipairArray">klikk klikk</button>
-      </div>
-    </section>
+   
   </div>
 </template>
 
@@ -41,11 +27,29 @@
 
       async created() {
         await this.sanityFetchTest(query);
-        console.log('added skipair:', this.test.addedSkipairs);
+        console.log(this.test);
+      },
+
+      data() {
+        return {
+          round: [],
+          valueFirstRound: [],
+          splittedIntoPairs: [],
+          number: 0
+        }
       },
 
       components: {
         Header
+      },
+
+      computed: {
+        findNr(index) {
+            let current = 0;
+            this.number =  current + (2*index);
+            return this.number;
+          }
+      
       },
 
       methods: {
@@ -53,15 +57,33 @@
         temporarySkipairArray() {
           const tempArray = []
 
-          this.test.addedSkipairs.forEach(pair => {
-            const skipair = {
-              ...pair, // get everything from pair object
-              value: 0 // add value attribute (for calculating result)
+          this.test.addedSkipairs.forEach((pair,index) => {
+            const currentValue = parseInt(this.valueFirstRound[index]) // parse value to number
+            const tempSkipair = {
+              product: pair.product,
+              value: currentValue, // add value attribute (for calculating result)
+              result: pair.result  += currentValue // update result (difference) => update this attribute to sanity 
             }
 
-            tempArray.push(skipair);
+            tempArray.push(tempSkipair);
+            pair.value = 0; // reset current value after updated to array
+
             console.log('temparray', tempArray);
+            console.log('check updated result', this.test.addedSkipairs);
           })
+
+          return tempArray
+        },
+
+        splitIntoPairs() {
+          for (let index = 0; index < this.test.addedSkipairs.length; index += 2) {
+            this.splittedIntoPairs.push([this.test.addedSkipairs[index], this.test.addedSkipairs[index +1]])
+            console.log(this.splittedIntoPairs)
+          }
+        },
+
+        filterWinners() {
+          
         }
       }
     }

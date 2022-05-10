@@ -14,7 +14,7 @@ export default {
             this.loading = false;
         },
 
-        createNewTest(name, place, date, temperature, snowdata, addedSkipairs) {
+        createNewTest(name, place, date, temperature, snowdata, numberOfpairs, addedSkipairs) {
             const newTest = {
                 _type: 'test',
                 name: name,
@@ -22,6 +22,7 @@ export default {
                 date: date,
                 temperature: temperature,
                 snowdata: snowdata,
+                numberOfPairs: numberOfpairs,
                 addedSkipairs: addedSkipairs
             }
 

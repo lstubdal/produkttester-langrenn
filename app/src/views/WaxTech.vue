@@ -49,6 +49,32 @@
 
         <!-- ADD SKIPARIS -->
         <section class="addSkipairs">
+            <h2>LEGG INN SKI </h2>
+            <div class="addSkipairs__number">
+                <label for="numberOfpairs">Hvor mange skipar skal testes?</label>
+
+                <select name="numberOfpairs" id="addSkis" @change="getNumberOfPairs">
+                    <option value="selectPlaceholder">Velg antall</option>
+                    <option :value="number" v-for="number in selectNumberOfPairs">{{ number }}</option>
+                </select>
+            </div>
+
+            <div class="addSkipairs__user">
+                <div v-if="numberOfpairs !== ''" class="addSkipairs__user-title">
+                    <p>Nr.</p>
+                    <p>Produkt</p>
+                </div>
+
+                <div class="pairs" v-for='index in numberOfpairs' :key='index'>
+                    <div class="pair">
+                        <label for="nr">{{ index }}</label>
+                        <input type="text" id="nr" name="pair" v-model="products[index-1]" placeholder="Skriv inn produkt">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- <section class="addSkipairs">
             <h2>SKIPAR FOR TESTING</h2>
             <div class="pairs" v-for='index in 8' :key='index'>
                 <div class="pair">
@@ -57,9 +83,9 @@
                 </div>
             </div>
         </section>
-        
+         -->
         <RouterLink :to="{ name: 'tester'}">
-            <button @click="waxTechDone">FERDIG</button>
+            <button @click="createTestSanity">FERDIG</button>
         </RouterLink>
     </div>
 </template>
@@ -78,13 +104,15 @@
                 date: '',
                 temperature: '',
                 skiTypes: ['Klassisk', 'Skøyting', 'Skibytte'],
+                selectNumberOfPairs: [2,4,6,8,10,12],
                 selectedTestType: '',
                 inTrack: '',
                 outsideTrack: '',
                 products: [], // collect skiproducts
                 snowdata: '',
                 clicked: false,
-                totalSkiPairs: 8 // fix to dynamic value
+                numberOfpairs: ''
+               
             }
         },
 
@@ -106,12 +134,16 @@
 
         methods: {
             getNumberOfPairs(event) {
-                const parsedNumberValue = parseInt(event.target.value) //parse from string to number
-                this.numberOfSkipairs = parsedNumberValue;
+                return this.numberOfpairs = parseInt(event.target.value);
             },
 
             getTestType(event) {
-                this.selectedTestType = event.target.value;
+                return this.selectedTestType = event.target.value;
+            },
+
+            getTemperature() {
+               const parsedTemp = parseInt(this.temperature)
+               return parsedTemp
             },
 
             createSnowDataObject() {
@@ -120,19 +152,18 @@
                     inTrack: this.selectedTestType === 'Klassisk' ||  this.selectedTestType === 'Skibytte' ? this.inTrack : '',
                     outsideTrack: this.selectedTestType === 'Skøyting' || this.selectedTestType === 'Skibytte' ? this.outsideTrack : '',
                     skating: this.selectedTestType === 'Skøyting' ? true : false,
-                    skichange: this.selectedTestType === 'Skibytte' ? true :  false
+                    skichange: this.selectedTestType === 'Skibytte' ? true : false
                 }
+
                 return snowdata; 
             },
 
             generateRandomKey() {
-                let key = ''
-                const char = 'abcdefghijklmnopqrstuvwxyz0123456789'
-
+                let key = '';
+                const char = 'abcdefghijklmnopqrstuvwxyz0123456789';
                 for (let index = 0; index < 7; index++) {
-                    key += char.charAt(Math.floor(Math.random) *  7)
+                    key += char.charAt(Math.random()*  7);
                 }
-
                 return key
             },
 
@@ -149,16 +180,17 @@
                 return addedSkipairs
             },
 
-            waxTechDone() {
-                const parsedTemp = parseInt(this.temperature) /* parse strings to numbers */
+            createTestSanity() {
+                const parsedNumber = parseInt(this.numberOfpairs);
 
                 /* create new test document to sanity */
                 this.createNewTest(
                     this.name, 
                     this.place, 
                     this.date,
-                    parsedTemp,
+                    this.getTemperature(),
                     this.createSnowDataObject(),
+                    parsedNumber,
                     this.createSkipairObjects()
                 );
             }
