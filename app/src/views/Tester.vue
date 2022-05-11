@@ -1,6 +1,7 @@
 <template>
   <Header  :role="'tester'" />
   <div v-if="loading">Henter data...</div>
+
   <div v-else class="tester">
     <section class="tester__information">
         <div class="tester__place">
@@ -10,20 +11,24 @@
          <h2>{{ test.name }}</h2>
         <span>{{ test.temperature }} Celsius</span> 
     </section>
+    <RouterView />
 
+      <!-- to render nested views -->
       <!-- tester input -->
-     <section class="tester__skipairs">
+     <section v-if="$route.name === 'tester'" class="tester__skipairs">
+       <h3>TESTING</h3>
       <div class="tester__skipairs-title">
         <span>Nr. </span>
         <span>Verdi</span>
       </div>
 
+        <!-- MAKE comp. -->
        <div v-for="index in test.numberOfPairs">
           <label for="product">Nr. {{ index }}</label>
           <input type="text" name="product" placeholder="Skriv inn resultat" v-model="valueFirstRound[index-1]">
       </div>
 
-      <button @click="findWinners">create temp array</button>
+      <RouterLink :to="{ name: 'nesteRunde', params: {runde: 'neste-runde' } }" @click="nextRound">create temp array</RouterLink>
     </section>
   </div>
 </template>
@@ -38,15 +43,12 @@
 
       async created() {
         await this.sanityFetchTest(query); // fetch new test
-        this.splitIntoPairs(); // split skipair array into test pairs
+        console.log('router', this.$route.name)
       },
 
       data() {
         return {
-          round: [],
           valueFirstRound: [],
-          splittedIntoPairs: [],
-          number: 0
         }
       },
 
@@ -58,45 +60,47 @@
         /* create temporary array of skipairs with added 'value' attribute */
         temporaryArray() {
           const tempArray = []
+
           this.test.addedSkipairs.forEach((pair, index) => {
             const currentValue = parseInt(this.valueFirstRound[index]) // parse value to number
+            
             const tempSkipair = {
               _key: pair._key,
               product: pair.product,
               value: currentValue, // add value attribute (for calculating result)
               result: pair.result  += currentValue // update result (difference) => update this attribute to sanity 
             }
-
             tempArray.push(tempSkipair);
             pair.value = 0; // reset current value after updated to array
-
-           /*  console.log('temparray', tempArray);
-            console.log('check updated result', this.test.addedSkipairs); */
           })  
           return tempArray;
         },
 
-        findWinners() {
-          const testedPairs =  this.splitIntoPairs(this.temporaryArray()) // split tempArray into tested pairs to compare and find winners
-          console.log('splitttet', testedPairs);
-          const winners = []
-          // find winners
-          
-        },
-
         splitIntoPairs(tempArray) {
+          const splittedIntoPairs = []
           if (tempArray) {
             for (let index = 0; index < tempArray.length; index += 2) {
-            this.splittedIntoPairs.push([tempArray[index], tempArray[index +1]])
-            /* console.log('SPLITTED', this.splittedIntoPairs) */
+            splittedIntoPairs.push([tempArray[index], tempArray[index +1]])
+            console.log('SPLITTED into pairs', splittedIntoPairs)
             }
-            return tempArray;
+            return splittedIntoPairs;
           }
-          
         },
 
-        filterWinners() {
-          
+        nextRound() {
+          const testedPairs =  this.splitIntoPairs(this.temporaryArray()) // split tempArray into tested pairs to compare and find winners
+          console.log('splittet testpairs', testedPairs); 
+          const nextRound = []
+
+          testedPairs.forEach(pairs => {
+            const [first, second] = pairs // crate pair variable
+            const winnerValue = Math.min(first.value, second.value); // compare first and second to fnd lowest value aka winner
+            const currentWinner = pairs.find(skipair => skipair.value === winnerValue);
+      
+            nextRound.push(currentWinner)         
+          })
+
+          this.$store.dispatch('updateNextRound', nextRound); // save rounds in store to access to next round
         }
       }
     }

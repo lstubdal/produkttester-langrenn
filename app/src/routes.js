@@ -2,6 +2,7 @@ import Home from './views/Home.vue';
 import Tests from './views/Tests.vue';
 import WaxTech from './views/WaxTech.vue';
 import Tester from './views/Tester.vue';
+import NextRound from './components/NextRound.vue';
 
 export default [
 	{ 
@@ -16,13 +17,21 @@ export default [
 	},
 	{
 		name: 'waxTech',
-		path: '/ny-test/smoerer',
+		path: '/smoerer',
 		component: WaxTech
 	},
 	{
 		name: 'tester',
-		path: '/ny-test/tester',
-		component: Tester
+		path: '/tester',
+		component: Tester,
+		children: [
+			{ 
+				name: 'nesteRunde',
+				path: ':runde', 
+				component: NextRound,
+				
+			}
+		]
 	}
 ];
 
