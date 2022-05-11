@@ -1,5 +1,5 @@
 <template>
-    <Header :role="waxTech" />
+    <Header :role="'waxTech'" />
 
     <div class="waxTech">
         <div class="waxTech__input">
@@ -84,7 +84,7 @@
             </div>
         </section>
          -->
-         <button @click="createSlug">slug</button>
+        
         <RouterLink :to="{ name: 'tester'}">
             <button @click="createTestSanity">FERDIG</button>
         </RouterLink>
@@ -154,7 +154,6 @@
                     skating: this.selectedTestType === 'Skøyting' ? true : false,
                     skichange: this.selectedTestType === 'Skibytte' ? true : false
                 }
-
                 return snowdata; 
             },
 
@@ -171,7 +170,7 @@
                 const addedSkipairs =  []
                 this.products.forEach(product => {
                    const skipairWithProduct = {
-                       product: product, // ...product ?
+                       product: product, // 
                        result: 0,
                        _key: this.generateRandomKey()
                    }
