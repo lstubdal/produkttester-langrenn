@@ -1,4 +1,4 @@
-*[_type == 'test'][0] {
+*[_type == 'test'][1] {
     _id,
     date,
     name,

@@ -35,6 +35,21 @@ export default {
                   .then((res => {
                       console.log(`test was created, document ID is ${res._id}`)
                   }))
-        }
+        },
+
+        /* updateResultSanity(testID, pair, index) {
+            // const resultToUpdate = [`addedSkipairs[${index}]`, `addedSkipairs[_key == ${skipairKey}]`]
+            let pairToUpdate = `addedSkipairs[${index}].result`
+
+            sanity.patch(testID) // document id to patch
+                  .set({ pairToUpdate: pair.result }) 
+                  .commit() // perform patch, return promise
+                  .then((updatedResult) => {
+                      console.log('oppdatert!', updatedResult)
+                  })
+                  .catch((err) => {
+                      console.log('feil!!', err);
+                  })
+        } */
     }
 }

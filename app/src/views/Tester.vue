@@ -9,26 +9,25 @@
           <span>{{ test.place }}</span>
         </div>
          <h2>{{ test.name }}</h2>
-        <span>{{ test.temperature }} Celsius</span> 
+        <span>{{ test.temperature }} Celsius</span>
     </section>
-    <RouterView />
 
-      <!-- to render nested views -->
+    <RouterView /> <!-- to render nested views -->
+
       <!-- tester input -->
      <section v-if="$route.name === 'tester'" class="tester__skipairs">
-       <h3>TESTING</h3>
-      <div class="tester__skipairs-title">
-        <span>Nr. </span>
-        <span>Verdi</span>
-      </div>
+        <h3>TESTING</h3>
+        <div class="tester__skipairs-title">
+          <span>Nr. </span>
+          <span>Verdi</span>
+        </div>
 
-        <!-- MAKE comp. -->
-       <div v-for="index in test.numberOfPairs">
-          <label for="product">Nr. {{ index }}</label>
-          <input type="text" name="product" placeholder="Skriv inn resultat" v-model="valueFirstRound[index-1]">
-      </div>
+        <div v-for="index in test.numberOfPairs">
+            <label for="product">Nr. {{ index }}</label>
+            <input type="text" name="product" placeholder="Skriv inn resultat" v-model="valueFirstRound[index-1]">
+        </div>
 
-      <RouterLink :to="{ name: 'nesteRunde', params: {runde: 'neste-runde' } }" @click="nextRound">create temp array</RouterLink>
+      <RouterLink :to="{ name: 'nesteRunde', params: {runde: 'runde' } }" @click="nextRound">create temp array</RouterLink>
     </section>
   </div>
 </template>
@@ -37,23 +36,25 @@
     import Header from '../components/Header.vue';
     import viewMixin from '../mixins/viewMixin';
     import query from '../groq/newTest.groq?raw';
+    import NextRound from '../components/NextRound.vue';
 
     export default {
       mixins: [viewMixin],
 
       async created() {
         await this.sanityFetchTest(query); // fetch new test
-        console.log('router', this.$route.name)
       },
 
       data() {
         return {
           valueFirstRound: [],
+          round: 0,
         }
       },
 
       components: {
-        Header
+        Header,
+        NextRound
       },
 
       methods: {
@@ -70,18 +71,19 @@
               value: currentValue, // add value attribute (for calculating result)
               result: pair.result  += currentValue // update result (difference) => update this attribute to sanity 
             }
+
             tempArray.push(tempSkipair);
+            this.$store.dispatch('updateTotalResults', tempArray)
             pair.value = 0; // reset current value after updated to array
-          })  
+          }) 
           return tempArray;
         },
 
         splitIntoPairs(tempArray) {
           const splittedIntoPairs = []
-          if (tempArray) {
+          if (tempArray) { // Add: if tempArray.length >= 2 check
             for (let index = 0; index < tempArray.length; index += 2) {
             splittedIntoPairs.push([tempArray[index], tempArray[index +1]])
-            console.log('SPLITTED into pairs', splittedIntoPairs)
             }
             return splittedIntoPairs;
           }
@@ -89,18 +91,17 @@
 
         nextRound() {
           const testedPairs =  this.splitIntoPairs(this.temporaryArray()) // split tempArray into tested pairs to compare and find winners
-          console.log('splittet testpairs', testedPairs); 
-          const nextRound = []
+          const currentWinners = []
 
           testedPairs.forEach(pairs => {
             const [first, second] = pairs // crate pair variable
             const winnerValue = Math.min(first.value, second.value); // compare first and second to fnd lowest value aka winner
             const currentWinner = pairs.find(skipair => skipair.value === winnerValue);
       
-            nextRound.push(currentWinner)         
+            currentWinners.push(currentWinner)         
           })
 
-          this.$store.dispatch('updateNextRound', nextRound); // save rounds in store to access to next round
+          this.$store.dispatch('updateNextRound', currentWinners); // save rounds in store to access to next round
         }
       }
     }

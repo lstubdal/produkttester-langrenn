@@ -168,15 +168,19 @@
 
             createSkipairObjects() {
                 const addedSkipairs =  []
-                this.products.forEach(product => {
-                   const skipairWithProduct = {
-                       product: product, // 
-                       result: 0,
-                       _key: this.generateRandomKey()
-                   }
-                   addedSkipairs.push(skipairWithProduct)
-                });
-                return addedSkipairs
+                this.products.forEach((product, index) => {
+                    let key = JSON.stringify(index+1);
+
+                    const skipairWithProduct = {
+                        product: product, // 
+                        result: 0,
+                        _key: key // this.generateRandomKey()
+                    }
+
+                    addedSkipairs.push(skipairWithProduct)
+                    });
+
+                    return addedSkipairs
             },
 
             createSlug() {
@@ -191,7 +195,7 @@
 
             createTestSanity() {
                 /* create new testdocument to sanity */
-                this.createNewTest(
+                /* this.createNewTest(
                     this.name, 
                     this.place, 
                     this.date,
@@ -200,7 +204,7 @@
                     this.numberOfpairs,
                     this.createSkipairObjects(),
                     this.createSlug()
-                );
+                ); */
             }
         }
     }
