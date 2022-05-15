@@ -1,4 +1,4 @@
-import sanity from "../sanity";
+import sanity from "../sanity.js";
 
 export default {
     data() {
@@ -9,8 +9,8 @@ export default {
     },
 
     methods: {
-        async sanityFetchTest(query) {
-            this.test = await sanity.fetch(query);
+        async sanityFetchTest(query, params) {
+            this.test = await sanity.fetch(query, params);
             this.loading = false;
         },
 
@@ -30,12 +30,13 @@ export default {
             }
 
             /* OBS! REMEBER TO CHECK IF NOT EXIST */
-
             sanity.create(newTest)
                   .then((res => {
                       console.log(`test was created, document ID is ${res._id}`)
                   }))
         },
+
+
 
         /* updateResultSanity(testID, pair, index) {
             // const resultToUpdate = [`addedSkipairs[${index}]`, `addedSkipairs[_key == ${skipairKey}]`]
