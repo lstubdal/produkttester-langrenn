@@ -1,9 +1,18 @@
 <template>
     <header class="header">
-        <div :class="`header--waxTech ${role === 'tester' ? 'header--tester' : ''}`">
-            <h2 v-if="role === 'waxTech'">Smører</h2>
-            <h2 v-else>Tester</h2>
-            <img src="/icons/hamburger-dark.svg" alt="hamburgermenu">
+        <div :class="`header--waxTech ${page === 'tester' ? 'header--tester' : '' || page === 'tests' ? 'header--tests' : '' || page === 'previousTest' ? 'header--previousTest' : ''}`">
+            <h2 v-if="page === 'waxTech'">Smører</h2>
+            <h2 v-if="page === 'tester'">Tester</h2>
+            <h2 v-if="page === 'tests'">Tidligere tester</h2>
+
+            <div v-if="page === 'previousTest'" class="header--previousTest-back">
+                <img src="/icons/back.svg" alt="back arrow">
+                <RouterLink :to="{name: 'home'}" class="header--previousTest-link">Tilbake</RouterLink>
+            </div>
+            
+            <img v-if="page === 'waxTech'" src="/icons/hamburger-dark.svg" alt="hamburgermenu">
+            <img v-if="page === 'tester'" src="/icons/hamburger-light.svg" alt="hamburgermenu">
+            <img v-if="page === 'tests' || page === 'previousTest'" src="/icons/hamburger-red.svg" alt="hamburgermenu">
         </div>
     </header>
 </template>
@@ -11,7 +20,7 @@
 <script>
     export default {
         props: {
-            role: {
+            page: {
                 type: String
             }
         }
@@ -19,12 +28,14 @@
 </script>
 
 <style>
-    .header--waxTech, .header--tester {
-        height: 10%;
+    .header--waxTech, .header--tester, .header--tests, .header--previousTest {
+        width: 100vw;
+        height: 10vh;
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: var(--padding-small) var(--padding-medium);
+        font-family: var(--main-font);
     }
 
     .header--waxTech {
@@ -36,5 +47,22 @@
     .header--tester {
         color: var(--light);
         background-color: var(--main-color);
+    }
+
+    .header--tests, .header--previousTest {
+        color: var(--second-color);
+        background-color: var(--light);
+    }
+
+    .header--previousTest-back {
+        width: 10%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .header--previousTest-link {
+        text-decoration: none;
+        color: var(--second-color);
     }
 </style>
