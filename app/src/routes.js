@@ -1,12 +1,15 @@
 import Home from './views/Home.vue';
-import Tests from './views/Tests.vue';
+import FindTests from './views/FindTests.vue';
 import WaxTech from './views/WaxTech.vue';
 import Tester from './views/Tester.vue';
+import PreviousTests from './components/PreviousTests.vue';
+import Test from './components/Test.vue';
 
-/* children of Tester comp */
+/* children*/
 import NextRound from './components/NextRound.vue';
 import Results from './views/Results.vue';
 
+/* OBS FIKS ENGELSK OG NORSK KOMBINARSJON */
 export default [
 	{ 
 		name: 'home', 		
@@ -14,9 +17,9 @@ export default [
 		component: Home 
 	},
 	{
-		name: 'tests',
+		name: 'findTests',
 		path: '/tidligere-tester',
-		component: Tests
+		component: FindTests
 	},
 	{
 		name: 'waxTech',
@@ -39,6 +42,18 @@ export default [
 				component: Results
 			}
 		]
+	},
+	{
+		name: 'findTest',
+		path: '/tidligere-tester/:typeOfTest',
+		component: PreviousTests
+	},
+	{
+		name: 'test',
+		path: '/tidligere-tester/:testSlug',
+		component: Test
 	}
+		
+	
 ];
 
