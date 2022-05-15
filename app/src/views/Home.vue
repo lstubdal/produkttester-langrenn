@@ -1,7 +1,7 @@
 <template>
     <div class="home">
         <section class="home__headline">
-            <h1>{{ title }}</h1>
+            <h1 class="home__title">{{ title }}</h1>
             <hr class="home__headline-seperator">
             <p>{{ undertitle}}</p>
         </section>
@@ -45,14 +45,28 @@
         align-items: center;
         background-image: url('/images/home.png');
         background-size: cover;
+        font-family: var(--main-font);
     }
 
-    .home__headline h1, .home__headline p {
+    .home__headline {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .home__title {
+        font-size: 3em;
+    }
+
+    .home__title, .home__headline p {
         color: var(--light);
     }
 
     .home__headline-seperator {
-        /* create line */
+        width: 100%;
+        border: 0.5px solid var(--light);
+        background-color: var(--light);
+        margin: var(--margin-small);
     }
 
     .home__links {
@@ -66,7 +80,10 @@
     }
 
     .home__tests, .home__newTest {
+        height: 60px;
+        width: 220px;
         display: flex;
+        justify-content: center;
         align-items: center;
         color: var(--light);
         border: none;
@@ -78,7 +95,9 @@
     }
 
     .home__tests {
-        background-color: var(--second-color);
+        background-color: var(--light);
+        border: 2px solid var(--main-color);
+        color: var(--main-color);
     }
 
     .home__newTest {
