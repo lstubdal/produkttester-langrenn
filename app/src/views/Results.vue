@@ -1,5 +1,6 @@
 <template>
   <div class="results">
+      <Banner :bannerTitle="'RESULTATER'" />
       <div class="results__headline">
           <span>Nr.</span>
           <span>Product</span>
@@ -16,9 +17,15 @@
 </template>
 
 <script>
+    import Banner from '../components/Banner.vue';
+
     export default {
         created() {
             this.sortResultsASC() // best skipair first
+        },
+
+        components: {
+            Banner
         },
 
         computed: {
@@ -47,9 +54,9 @@
 
 <style>
     .results {
+        height: 90vh;
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
     }
   
@@ -59,7 +66,4 @@
         justify-content: space-between;
         align-items: center;
     }
-
-    
-
 </style>
