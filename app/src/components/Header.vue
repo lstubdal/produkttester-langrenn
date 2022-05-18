@@ -10,15 +10,19 @@
                 <RouterLink :to="{name: 'home'}" class="header--previousTest-link">Tilbake</RouterLink>
             </div>
             
-            <img v-if="page === 'waxTech'" src="/icons/hamburger-dark.svg" alt="hamburgermenu">
-            <img v-if="page === 'tester'" src="/icons/hamburger-light.svg" alt="hamburgermenu">
-            <img v-if="page === 'tests' || page === 'previousTest'" src="/icons/hamburger-red.svg" alt="hamburgermenu">
+            <Hamburger :page="page" />
         </div>
     </header>
 </template>
 
 <script>
+    import Hamburger from '../components/Hamburger.vue';
+
     export default {
+        components: {
+            Hamburger
+        },
+
         props: {
             page: {
                 type: String
