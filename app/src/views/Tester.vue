@@ -1,5 +1,5 @@
 <template>
-  <div v-if="loading">Henter data...</div>
+  <LoadingScreen v-if="loading" />
   <div v-else class="tester">
     <Header  :page="'tester'" />
     <Information :test="test" :page="'tester'" />
@@ -30,6 +30,7 @@
 
 <script>
     import Header from '../components/Header.vue';
+    import LoadingScreen from '../components/LoadingScreen.vue';
     import viewMixin from '../mixins/viewMixin';
     import query from '../groq/newTest.groq?raw';
     import NextRound from '../components/NextRound.vue';
@@ -40,7 +41,7 @@
       mixins: [viewMixin],
 
       async created() {
-        await this.sanityFetchTest(query); // fetch new test
+       await this.sanityFetchTest(query); // fetch new test
       },
 
       data() {
@@ -54,7 +55,8 @@
         Header,
         NextRound,
         Banner,
-        Information
+        Information,
+        LoadingScreen
       },
 
       methods: {

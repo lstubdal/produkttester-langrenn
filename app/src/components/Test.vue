@@ -1,5 +1,5 @@
 <template>
-    <div v-if="loading">Henter test...</div>
+    <LoadingScreen v-if="loading" />
     <div v-else class="test">
         <Header :page="'previousTest'" />
         <Information :test="test" :page="'previousTest'" class="test__information" />
@@ -32,11 +32,12 @@
 </template>
 
 <script>
-    import viewMixin from '../mixins/viewMixin';
-    import query from '../groq/previousTest.groq?raw';
+    import LoadingScreen from '../components/LoadingScreen.vue';
     import Header from '../components/Header.vue';
     import Information from '../components/Information.vue';
     import Banner from '../components/Banner.vue';
+    import viewMixin from '../mixins/viewMixin';
+    import query from '../groq/previousTest.groq?raw';
 
     export default {
         mixins: [viewMixin],
@@ -50,6 +51,7 @@
         },
 
         components: {
+            LoadingScreen,
             Header,
             Information,
             Banner
