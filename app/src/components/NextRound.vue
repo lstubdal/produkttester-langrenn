@@ -1,26 +1,30 @@
 <template>
     <div class="nextRound">
-        <div v-for="(pair, index) in nextRound">
-            <label for="product">Nr. {{ index +1 }}</label>
-            <div>KEY: {{ pair._key }}</div>
+        <Banner :bannerTitle="`TEST ${round}`" />
+
+        <div class="skipairs__user-title">
+          <span class="skipairs__user-number">Nr. </span>
+          <span class="skipairs__user-product">Verdi</span>
+        </div>
+
+        <div v-for="(pair, index) in nextRound" class="pair">
+            <label for="product" class="skipairs__number">{{ index +1 }}</label>
             <input ref="product" type="text" name="product" placeholder="Skriv inn resultat" v-model="inputValues[index]">
         </div>
 
         <RouterLink :to="{ name: 'nesteRunde', params: {runde: `runde-${round}` } } ">
-            <button @click="goToNextRound">next</button>
+            <button @click="goToNextRound" class="pageButton">next</button>
         </RouterLink>
-
     </div>
 </template>
 
 <script>
+    import Banner from '../components/Banner.vue';
+
     export default {
-        created() {
-            /* console.log(this.nextRound); */
-        },
         beforeRouteUpdate(to, from, next) {
             this.makeSkipairObjects();
-             this.findWinners() 
+            this.findWinners() 
             this.emptyInputFields();
             this.$store.dispatch('increaseRoundCount'); 
             next()
@@ -30,8 +34,12 @@
             return {
                 inputValues: [],
                 currentRoundResult: [],
-                round: 0
+                round: 2
             }
+        },
+
+        components: {
+            Banner
         },
 
         computed: {
@@ -46,8 +54,11 @@
 
             },
 
+            updateResultToStore() {
+
+            },
+
             makeSkipairObjects() {
-                console.log('input values length runde: ', this.round,'-', this.inputValues.length);
                 this.inputValues.forEach((value, index) => {
                     let valueNumber = parseInt(value)
                    
@@ -60,9 +71,7 @@
 
                     this.currentRoundResult.push(tempSkipair); 
                     console.log('current round index: ', this.currentRoundResult)
-            })
-
-            // after find winner: this.$store.dispatch('updateNextRound', this.currentRoundResult); //
+                })
             },
 
             splitIntoPairs() {
@@ -81,6 +90,7 @@
 
             findWinners() {
                 const winners = []
+                const loosers = []
                 const splitted = this.splitIntoPairs()
 
                 /* last test  */
@@ -94,9 +104,20 @@
                         const winnerValue = Math.min(first.value, second.value);
                         const currentWinner = pairs.find(pair => pair.value === winnerValue)
                         winners.push(currentWinner)
+                        console.log('wiiners', winners)
+
+                        const looserValue = Math.max(first.value, second.value)
+                        const currentLooser = pairs.find(pair => pair.value === looserValue)
+                        loosers.push(currentLooser);
+                        console.log('loosers', loosers);
                     })
-                    this.$store.dispatch('updateNextRound', winners);
+
+                    this.$store.dispatch('updateNextRound', loosers); // only update looser values because winnervalue is always 0
                 }
+
+                // find key to winners
+                // current result += result in store
+                this.$store.dispatch('updateTotalResults', loosers); 
                 this.currentRoundResult = []; // empty array for next round     
             },
             
@@ -106,11 +127,8 @@
                     this.inputValues[index] = '';
                 })
                 
-                console.log('inputvalues reset', this.inputValues)
                 /* then remove values for next round */
-                this.inputValues = []
-                console.log('inputvalues empty', this.inputValues)
-                
+                this.inputValues = []                
             }
         }
     }
@@ -118,9 +136,10 @@
 
 <style>
     .nextRound{
+        
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
+        margin: var(--margin-large) 0px;
     }
 </style>

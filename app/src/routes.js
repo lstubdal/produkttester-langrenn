@@ -2,8 +2,12 @@ import Home from './views/Home.vue';
 import FindTests from './views/FindTests.vue';
 import WaxTech from './views/WaxTech.vue';
 import Tester from './views/Tester.vue';
-import PreviousTests from './components/PreviousTests.vue';
 import Test from './components/Test.vue';
+
+import Place from './views/Place.vue';
+import WeatherData from './views/WeatherData.vue';
+import Date from './views/Date.vue';
+
 
 /* children*/
 import NextRound from './components/NextRound.vue';
@@ -18,7 +22,7 @@ export default [
 	},
 	{
 		name: 'findTests',
-		path: '/tidligere-tester',
+		path: '/finn-test',
 		component: FindTests
 	},
 	{
@@ -44,13 +48,23 @@ export default [
 		]
 	},
 	{
-		name: 'findTest',
-		path: '/tidligere-tester/:typeOfTest',
-		component: PreviousTests
+		name: 'place',
+		path: '/finn-test/place',
+		component: Place
+	},
+	{
+		name: 'weatherData',
+		path: '/finn-test/værdata',
+		component: WeatherData
+	},
+	{
+		name: 'date',
+		path: '/finn-test/dato',
+		component: Date
 	},
 	{
 		name: 'test',
-		path: '/tidligere-tester/:testSlug',
+		path: '/finn-test/:testSlug',
 		component: Test
 	}
 		

@@ -1,0 +1,6 @@
+*[_type == 'test' && date == $date] {
+    name,
+    slug {
+        current
+    }
+}

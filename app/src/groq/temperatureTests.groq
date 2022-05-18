@@ -1,0 +1,6 @@
+*[temperature >= $min && temperature <= $max] | order(temperature asc) {
+  name,
+  slug {
+    current
+  }
+} 

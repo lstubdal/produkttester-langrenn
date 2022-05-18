@@ -14,6 +14,7 @@ export default {
         
         getTotalResults(state) {
             return state.totalResults;
+            
         }
     },
 
@@ -26,17 +27,17 @@ export default {
             state.rounds.push(nextRound);
         },
         
-        addTotalResult(state, currentResult) {
-            if (state.totalResult === null) { // add results from first round
-                state.totalResult = currentResult;
-            } /* else {
+        addTotalResults(state, currentResults) {
+            if (state.totalResults === null) { // add results from first round
+                state.totalResults = currentResults;
+                
+            } else {
+                currentResults.forEach(currentPair => {
+                    const skipairToUpdate = state.totalResults.find(pairResult => pairResult._key === currentPair._key) 
+                    skipairToUpdate.result += currentPair.result
 
-                const skipairToUpdate = state.totalResult.find(skipair => skipair._key === key);
-                console.log('skipair to update', skipairToUpdate)
-
-
-            } */
-            
+                })
+            }
         },
 
         increaseRound(state) {

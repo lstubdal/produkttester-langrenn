@@ -12,7 +12,6 @@
           <span>{{ result.product }}</span>
           <span>{{ result.result }}</span>
       </div>
-
   </div>
 </template>
 

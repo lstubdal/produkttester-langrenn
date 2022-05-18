@@ -1,18 +1,18 @@
 <template>
     <Header :page="'tests'" />
     <div class="findTests">
-        <Banner :bannerPage="'findTest'" :bannerTitle="'Finn tester'" />
-        
-        <RouterLink :to="{ name : 'findTest', params: { typeOfTest: type} }">
-            <button @click="getChoosenTest" class="pageButton">Sted</button>
+        <Banner :bannerPage="'findTest'" :bannerTitle="'Finn tester'" class="findTest__banner"/>
+
+        <RouterLink :to="{ name : 'place' }">
+            <button class="pageButton">Sted</button>
         </RouterLink>
 
-        <RouterLink :to="{ name : 'findTest', params: { typeOfTest: type} }">
-            <button @click="getChoosenTest" class="pageButton">Værdata</button>
+        <RouterLink :to="{ name : 'weatherData' }">
+            <button class="pageButton">Værdata</button>
         </RouterLink>
 
-        <RouterLink :to="{ name : 'findTest', params: { typeOfTest: type} }">
-            <button @click="getChoosenTest" class="pageButton">Årstall</button>
+        <RouterLink :to="{ name : 'date' }">
+            <button class="pageButton">Dato</button>
         </RouterLink>
     </div>
 </template>
@@ -22,21 +22,9 @@
     import Banner from '../components/Banner.vue';
     
     export default {
-        data() {
-            return {
-                type: 'chosen'
-            }
-        },
-
         components: {
             Header,
             Banner
-        },
-
-        methods: {
-            getChoosenTest(event) {
-                return this.type = event.target.innerText;
-            }
         }
     }
 </script>
@@ -49,5 +37,10 @@
         flex-direction: column;
         align-items: center;
         background-image: url('/images/background-tests.png');
+    }
+
+    .findTest__banner {
+        margin-top: -100px;
+        margin-bottom: var(--margin-large);
     }
 </style>

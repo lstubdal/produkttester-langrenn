@@ -4,9 +4,10 @@
         <div class="tests">
             <Header :page="'previousTest'" />
             <Banner :bannerPage="'previousTest'" :bannerTitle="'Sted'" class="tests__banner" />
-            <div class="tests__test" v-for="t in test">
-               <RouterLink :to="{name: 'test', params: { testSlug: t.slug.current } }" class="tests__test-name">{{ t.name }}</RouterLink>
-            </div>
+                <p class="tests__undertitle">Vises i alfabetisk rekkefølge</p>
+                <div class="tests__test" v-for="t in test">
+                    <RouterLink :to="{name: 'test', params: { testSlug: t.slug.current } }" class="tests__test-name">{{ t.name }}</RouterLink>
+                </div>
         </div>
     </div>
 </template>
@@ -15,7 +16,8 @@
     import Header from '../components/Header.vue';
     import Banner from '../components/Banner.vue';
     import viewMixin from '../mixins/viewMixin';
-    import query from '../groq/testsName.groq?raw';
+    import nameQuery from '../groq/nameTests.groq?raw';
+
 
     export default {
         mixins: [viewMixin],
@@ -26,15 +28,8 @@
         },
 
         async created() {
-            await this.sanityFetchTest(query);
-
-            console.log(this.$route.name)
-        },
-
-        methods: {
-            /* clicked() {
-                return this.testClicked = true;
-            } */
+            await this.sanityFetchTest(nameQuery)
+     
         }
 
     }
@@ -54,6 +49,11 @@
         margin: var(--margin-large);
     }
 
+    .tests__undertitle {
+        color: rgb(143, 140, 140);
+        font-size: 0.9em;
+    }
+
     .tests__test {
         display: flex;
         justify-content: center;
@@ -66,4 +66,5 @@
         text-decoration: none;
         color: var(--second-color);
     }
+
 </style>

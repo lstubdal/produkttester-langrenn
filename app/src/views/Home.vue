@@ -7,7 +7,7 @@
         </section>
 
         <section class="home__links">
-            <RouterLink :to="{ name: 'tests'}" class="home__link">
+            <RouterLink :to="{ name: 'findTests'}" class="home__link">
                 <button class="home__tests">{{ buttonText[0] }}</button>
             </RouterLink>
 

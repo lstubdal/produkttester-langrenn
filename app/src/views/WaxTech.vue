@@ -1,5 +1,5 @@
 <template>
-    <Header :role="'waxTech'" />
+    <Header :page="'waxTech'" />
 
     <div class="waxTech">
         <div class="waxTech__input">
@@ -30,27 +30,27 @@
             <div class="snowData__types" >
                 <div class="snowData__type" v-for="(type, index) in skiTypes" >
                     <label :for="type">{{ type }}</label>
-                    <input type="checkbox" :id="type" :name="type" :value="type" :v-model="selectedTestType" @change="getTestType">
+                    <input type="checkbox" class="snowData__checkbox" :name="type" :value="type" :v-model="selectedTestType" @change="getTestType">
                 </div>
             </div>
 
             <div class="snowData__values">
                 <div class="snowData__value" v-if="selectedTestType === 'Klassisk' || selectedTestType === 'Skibytte'">
                     <label for="inTrack">I spor</label>
-                    <input type="text" id="inTrack" name="inTrack" placeholder="Format eks. 25%-29%" v-model="inTrack">   
+                    <input type="text" id="inTrack" name="inTrack" placeholder="Format eks. 25%-29%" v-model="inTrack" class="snowData__input">   
                 </div>
 
                 <div v-if="selectedTestType === 'Skøyting' || selectedTestType === 'Skibytte'" class="snowData__value">
                     <label for="outsideTrack">Utenfor spor</label>
-                    <input type="text" id="outsideTrack" name="outsideTrack" placeholder="Format eks. 25%-29%" v-model="outsideTrack">   
+                    <input type="text" id="outsideTrack" name="outsideTrack" placeholder="Format eks. 25%-29%" v-model="outsideTrack" class="snowData__input">   
                 </div>
             </div>
         </section>
 
-        <!-- ADD SKIPARIS -->
-        <section class="addSkipairs">
-            <h2>LEGG INN SKI </h2>
-            <div class="addSkipairs__number">
+        <!-- SELECT NUMBER OF SKIPAIRS -->
+        <section class="skipairs">
+            <h3>LEGG INN SKI </h3>
+            <div class="skipairs__number">
                 <label for="numberOfpairs">Hvor mange skipar skal testes?</label>
 
                 <select name="numberOfpairs" id="addSkis" @change="getNumberOfPairs">
@@ -59,10 +59,11 @@
                 </select>
             </div>
 
-            <div class="addSkipairs__user">
-                <div v-if="numberOfpairs !== ''" class="addSkipairs__user-title">
-                    <p>Nr.</p>
-                    <p>Produkt</p>
+            <!-- ADD SKIPAIRS -->
+            <div class="skipairs__user">
+                <div v-if="numberOfpairs !== ''" class="skipairs__user-title">
+                    <p class="skipairs__user-number">Par.</p>
+                    <p class="skipairs__user-product">Produkt</p>
                 </div>
 
                 <div class="pairs" v-for='index in numberOfpairs' :key='index'>
@@ -74,19 +75,8 @@
             </div>
         </section>
 
-        <!-- <section class="addSkipairs">
-            <h2>SKIPAR FOR TESTING</h2>
-            <div class="pairs" v-for='index in 8' :key='index'>
-                <div class="pair">
-                    <label for="nr">{{ index }}</label>
-                    <input type="text" id="nr" name="pair" v-model="products[index-1]" placeholder="Skriv inn produkt">
-                </div>
-            </div>
-        </section>
-         -->
-        
         <RouterLink :to="{ name: 'tester'}">
-            <button @click="createTestSanity">FERDIG</button>
+            <button @click="createTestSanity" class="pageButton">NESTE</button>
         </RouterLink>
     </div>
 </template>
@@ -212,12 +202,14 @@
 
 <style>
     .waxTech {
-        width: 100%;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        font-family: var(--main-font);
         padding: var(--padding-large);
+        background-image: url(/images/background.png);
+        background-size: cover;
     }
 
     .waxTech__input {
@@ -225,13 +217,40 @@
         flex-direction: column;
         align-items: center;
         margin: var(--margin-medium);
+        font-size: 1.2em;
+        color: var(--main-color);
+    }
+
+    .waxTech__input input {
+       padding: 3%;
+       margin-top: 2%;
+       border: 1.5px solid var(--main-color);
+       border-radius: 2px;
+    }
+
+    .waxTech__input ::placeholder {
+        font-size: 1em;
+        opacity: 50%;
     }
 
     .snowData {
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin: var(--margin-large);
+        margin: var(--margin-medium);
+        color: var(--main-color);
+    }
+
+    .snowData h3 {
+        padding: var(--padding-small);
+        font-size: 1.2em;
+    }
+
+    .snowData__checkbox {
+        height: 25px;
+        width: 25px;
+        border: 2px solid var(--main-color);
+        margin: var(--margin-small);
     }
 
     .snowData__types {
@@ -244,24 +263,28 @@
     .snowData__type {
         display: flex;
         flex-direction: column;
-        align-items: center;
         padding: var(--padding-medium);
     }
 
-    .addSkipairs {
-        margin: var(--margin-large);
+    .snowData__values {
+        width: 100%;
+        font-size: 1em;
     }
 
-    .addSkipairs__number {
-        display: flex;
-        flex-direction: column;
+    .snowData__value {
+        margin: 0px var(--margin-medium) var(--margin-small) ;
     }
 
-    .addSkipairs__user-title {
-        display: flex;
+    .snowData__value label  {
+        width: 50%;
+        margin-right: var(--margin-small)
     }
 
-    .pair {
-        display: flex;
+    .snowData__input {
+       padding: 1.5%;
+    }
+
+    .snowData__value ::placeholder  {
+        opacity: 50%;
     }
 </style>

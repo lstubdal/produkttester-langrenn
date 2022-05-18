@@ -73,3 +73,34 @@
     font-size: 1.2em;
 }
 
+.tests {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: var(--main-font);
+    font-size: 1.3em;
+}
+
+.tests__banner {
+    margin: var(--margin-large);
+}
+
+.tests__undertitle {
+    color: rgb(143, 140, 140);
+    font-size: 0.9em;
+}
+
+.tests__test {
+    display: flex;
+    justify-content: center;
+    border-bottom: 1px solid var(--second-color);
+    padding: 0.5%;
+    margin: var(--margin-small);
+}
+
+.tests__test-name {
+    text-decoration: none;
+    color: var(--second-color);
+}
+

@@ -1,33 +1,29 @@
 <template>
-  <Header  :role="'tester'" />
   <div v-if="loading">Henter data...</div>
-
   <div v-else class="tester">
-    <section class="tester__information">
-        <div class="tester__place">
-          <img src="/icons/location.svg" alt="location tag">
-          <span>{{ test.place }}</span>
-        </div>
-         <h2>{{ test.name }}</h2>
-        <span>{{ test.temperature }} Celsius</span>
-    </section>
-
-    <RouterView /> <!-- to render nested views -->
+    <Header  :page="'tester'" />
+    <Information :test="test" :page="'tester'" />
+    
+    <RouterView /> <!-- to render child views of tester -->
 
       <!-- tester input -->
      <section v-if="$route.name === 'tester'" class="tester__skipairs">
-        <h3>TESTING</h3>
-        <div class="tester__skipairs-title">
-          <span>Nr. </span>
-          <span>Verdi</span>
+        <Banner :bannerTitle="'TEST'" />
+        
+        <!-- make comp -->
+        <div class="skipairs__user-title">
+          <span class="skipairs__user-number">Nr. </span>
+          <span class="skipairs__user-product">Verdi</span>
         </div>
 
-        <div v-for="index in test.numberOfPairs">
-            <label for="product">Nr. {{ index }}</label>
-            <input type="text" name="product" placeholder="Skriv inn resultat" v-model="valueFirstRound[index-1]">
+        <div class="pair" v-for="index in test.numberOfPairs">
+            <label for="product">{{ index }}</label>
+            <input type="text" name="product" placeholder="Skriv inn resultat" v-model="valueFirstRound[index -1]">
         </div>
 
-      <RouterLink :to="{ name: 'nesteRunde', params: {runde: 'runde' } }" @click="nextRound">create temp array</RouterLink>
+      <RouterLink :to="{ name: 'nesteRunde', params: {runde: 'runde' } }" @click="nextRound">
+        <button class="pageButton">NEXT</button>
+      </RouterLink>
     </section>
   </div>
 </template>
@@ -37,6 +33,8 @@
     import viewMixin from '../mixins/viewMixin';
     import query from '../groq/newTest.groq?raw';
     import NextRound from '../components/NextRound.vue';
+    import Banner from '../components/Banner.vue';
+    import Information from '../components/Information.vue'
 
     export default {
       mixins: [viewMixin],
@@ -54,7 +52,9 @@
 
       components: {
         Header,
-        NextRound
+        NextRound,
+        Banner,
+        Information
       },
 
       methods: {
@@ -73,9 +73,10 @@
             }
 
             tempArray.push(tempSkipair);
-            this.$store.dispatch('updateTotalResults', tempArray)
-            pair.value = 0; // reset current value after updated to array
+            /* pair.value = 0; */ // reset current value after updated to array
           }) 
+
+          this.$store.dispatch('updateTotalResults', tempArray)
           return tempArray;
         },
 
@@ -98,7 +99,8 @@
             const winnerValue = Math.min(first.value, second.value); // compare first and second to fnd lowest value aka winner
             const currentWinner = pairs.find(skipair => skipair.value === winnerValue);
       
-            currentWinners.push(currentWinner)         
+            currentWinners.push(currentWinner)
+            console.log('current winenrs reuslt', currentWinners);
           })
 
           this.$store.dispatch('updateNextRound', currentWinners); // save rounds in store to access to next round
@@ -109,7 +111,12 @@
 
 <style>
   .tester {
-    width: 100%;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--main-font);
+    color: var(--main-color);
+    background-image: url(/images/background.png);
+    padding-bottom: var(--padding-large);
   }
 
   .tester__header {
@@ -117,30 +124,11 @@
     align-items: center;
   }
 
-  .tester__information {
-    display: flex;
-    justify-content: space-between;
-    padding: var(--padding-medium);
-  }
-
-  .tester__place {
-    display: flex;
-    align-items: center;
-  }
-
-  .tester__place span {
-    padding-left: var(--padding-small);
-  }
-
   .tester__skipairs {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
-  }
-
-  .tester__skipairs-title {
-    display: flex;
   }
 
   .tester__input {
