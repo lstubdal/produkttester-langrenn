@@ -7,19 +7,22 @@
             <input type="text" id="testname" name="testname" placeholder="Skriv inn navn på test" v-model="name">   
         </div>
 
-        <div class="waxTech__input">
-            <label for="place">Sted</label>
-            <input type="text" id="place" name="place" v-model="place" placeholder="Skriv inn sted for test">   
-        </div>
+        <div class="waxTech__input--responsive">
+            <div class="waxTech__input">
+                <label for="place">Sted</label>
+                <input type="text" id="place" name="place" v-model="place" placeholder="Skriv inn sted for test">   
+            </div>
 
-        <div class="waxTech__input">
-            <label for="date">Dato</label>
-            <input type="date" id="date" name="date" v-model="date">   
-        </div>
+            <div class="waxTech__input">
+                <label for="date">Dato</label>
+                <input type="date" id="date" name="date" v-model="date">   
+            </div>
 
-        <div class="waxTech__input">
-            <label for="temperature">Temperatur</label>
-            <input type="text" id="temperature" name="temperature" v-model="temperature" placeholder="Celcius">   
+            <div class="waxTech__input">
+                <label for="temperature">Temperatur</label>
+                <input type="text" id="temperature" name="temperature" v-model="temperature" placeholder="Celcius">   
+            </div>
+
         </div>
 
         <!-- SNOWDATA -->
@@ -221,6 +224,7 @@
         color: var(--main-color);
     }
 
+
     .waxTech__input input {
        padding: 3%;
        margin-top: 2%;
@@ -287,4 +291,14 @@
     .snowData__value ::placeholder  {
         opacity: 50%;
     }
+
+    @media screen and (min-width: 800px) {
+        .waxTech__input--responsive {
+            display: flex;
+            flex-direction: row;
+        }
+    }
+
+
+    
 </style>
