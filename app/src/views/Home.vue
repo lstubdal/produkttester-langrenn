@@ -1,5 +1,5 @@
 <template>
-    <div class="home">
+    <div class="home" :style="{ backgroundImage: `url(${ backgroundImageUrl })` }">
         <section class="home__headline">
             <h1 class="home__title">{{ title }}</h1>
             <hr class="home__headline-seperator">
@@ -8,13 +8,13 @@
 
         <section class="home__links">
             <RouterLink :to="{ name: 'findTests'}" class="home__link">
-                <button class="home__tests">{{ buttonText[0] }}</button>
+                <button class="home__tests">Finn tidligere tester</button>
             </RouterLink>
 
             <RouterLink :to="{ name: 'waxTech'}" class="home__link">
                 <button class="home__newTest">
                     <img src="/icons/add.svg" alt="add icon">
-                    {{ buttonText[1] }}
+                    Opprett ny test
                 </button>
             </RouterLink>
         </section>
@@ -22,16 +22,52 @@
 </template>
 
 <script>
- 
     export default {
         data() {
             return {
                 title: 'PRODUKTTESTEREN',
                 undertitle: 'Langrenn',
-                buttonText: ['Finn tidligere tester', 'Opprett ny test']
+                backgroundImageUrl: '',
+                backgroundImages: []
+            }
+        },
+
+        async created() {
+            this.fetchBackgroundImage();
+        },
+
+        mounted() {
+            /* this.delayBackgroundImage() */
+        },
+
+        methods: {
+            async fetchBackgroundImage() {
+                const key = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
+                const collectionId = 542909
+                const imageUrl = `https://api.unsplash.com/collections/${collectionId}/photos?client_id=${key}`;
+
+                const response = await fetch(imageUrl);
+                const images = await response.json();
+                
+                this.backgroundImages = images;
+                this.backgroundImageUrl = this.backgroundImages[0].urls.regular // default background
+
+            },
+
+            delayBackgroundImage() {
+                let index = 1;
+                setInterval(() => {
+                    this.backgroundImageUrl = this.backgroundImages[index].urls.regular
+                    if (index <= this.backgroundImages.length-1) {
+                        index +=1;
+                        console.log(index)
+                    } else {
+                        index = 0
+                        console.log('else', index)
+                    }
+                }, 4000);
             }
         }
-      
     }
 </script>
 
@@ -43,7 +79,6 @@
         flex-flow: column nowrap;
         justify-content: space-around;
         align-items: center;
-        background-image: url('/images/home.png');
         background-size: cover;
         font-family: var(--main-font);
     }
