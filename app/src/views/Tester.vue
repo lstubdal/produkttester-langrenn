@@ -18,7 +18,7 @@
 
         <div class="pair" v-for="(pair, index) in test.addedSkipairs">
             <label for="product">{{ pair._key }}</label>
-            <input type="text" name="product" placeholder="Skriv inn resultat" v-model="valueFirstRound[index]">
+            <input type="text" name="product" placeholder="Skriv inn resultat" v-model="resultValues[index]">
         </div>
 
       <RouterLink :to="{ name: 'nesteRunde', params: {runde: 'runde' } }" @click="nextRound">
@@ -46,7 +46,7 @@
 
       data() {
         return {
-          valueFirstRound: [],
+          resultValues: [],
           round: 0,
         }
       },
@@ -61,25 +61,22 @@
 
       methods: {
         /* create temporary array of skipairs with added 'value' attribute */
-        temporaryArray() {
+        createSkipairObjects() {
           const tempArray = []
 
           this.test.addedSkipairs.forEach((pair, index) => {
-            const currentValue = parseInt(this.valueFirstRound[index]) // parse value to number
-            
+            const currentValue = parseInt(this.resultValues[index]) // parse value to number
             const tempSkipair = {
               _key: pair._key,
               product: pair.product,
-              value: currentValue, // add value attribute (for calculating result)
+              value: currentValue, 
               result: pair.result  += currentValue // update result (difference) => update this attribute to sanity 
             }
-
-            tempArray.push(tempSkipair);
-            /* pair.value = 0; */ // reset current value after updated to array
+            tempArray.push(tempSkipair) 
           }) 
 
-          this.$store.dispatch('updateTotalResults', tempArray)
-          return tempArray;
+          this.$store.dispatch('updateTotalResults', tempArray)   // add results from first round to store 
+          return tempArray;   
         },
 
         splitIntoPairs(tempArray) {
@@ -93,19 +90,19 @@
         },
 
         nextRound() {
-          const testedPairs =  this.splitIntoPairs(this.temporaryArray()) // split tempArray into tested pairs to compare and find winners
-          const currentWinners = []
+          const testedPairs =  this.splitIntoPairs(this.createSkipairObjects()) // split tempArray into tested pairs to compare and find winners
+          const currentWinners = []  // all results = 0 so far
 
           testedPairs.forEach(pairs => {
             const [first, second] = pairs // crate pair variable
             const winnerValue = Math.min(first.value, second.value); // compare first and second to fnd lowest value aka winner
             const currentWinner = pairs.find(skipair => skipair.value === winnerValue);
-      
-            currentWinners.push(currentWinner)
-            console.log('current winenrs reuslt', currentWinners);
-          })
 
-          this.$store.dispatch('updateNextRound', currentWinners); // save rounds in store to access to next round
+            currentWinners.push(currentWinner)  // add currentWinner to array
+
+          })
+          this.$store.dispatch('updateNextRound', currentWinners); // save winners from current round in store to access to next round
+          this.$store.dispatch('increaseRoundIndex')
         }
       }
     }

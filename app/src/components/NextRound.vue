@@ -30,13 +30,13 @@
             this.makeSkipairObjects();
             this.findWinners() 
             this.emptyInputFields();
-            this.$store.dispatch('increaseRoundCount'); 
+            this.$store.dispatch('increaseRoundIndex'); 
             next()
         },
 
         data(){
             return {
-                resultValues: [],    // results from current test 
+                resultValues: [],    // results from current test
                 currentRoundResult: [], // temp array for current round reuslt
                 round: 2
             }
@@ -58,23 +58,22 @@
 
             },
 
-            updateResultToStore() {
-
-            },
-
             makeSkipairObjects() {
                 this.resultValues.forEach((value, index) => {
-                    let valueNumber = parseInt(value)
+                    let currentValue = parseInt(value)
                    
                     const skipairObject = {
                         _key: this.nextRound[index]._key,
                         product: this.nextRound[index].product,
-                        value: valueNumber,
-                        result: this.nextRound[index].result += valueNumber
+                        value: currentValue,
+                        result: this.nextRound[index].result += currentValue // add current value on total
                     }
-
                     this.currentRoundResult.push(skipairObject); 
                 })
+
+                // update current result to total result in skipairs
+                console.log('current roundResult', this.currentRoundResult)
+                this.$store.dispatch('updateTotalResults', this.currentRoundResult)
             },
 
             splitIntoPairs() {
@@ -93,34 +92,23 @@
 
             findWinners() {
                 const winners = []
-                const loosers = []
-                const splitted = this.splitIntoPairs()
-
-                /* last test  */
-                if (splitted.length < 2 ) {
-                    console.log('ikke nok par igjen') 
-                    this.$router.push({ name: 'results', params: 'results' }) // move to results view
+                const splittedPairs = this.splitIntoPairs()
+                
+              
+                if (splittedPairs.length < 2 ) {
+                    this.$router.push({ name: 'results', params: 'results' }) // move to results view after the last test
                     
                 } else {
-                        splitted.forEach(pairs => {
+                        splittedPairs.forEach(pairs => {
                         const [first, second] = pairs
                         const winnerValue = Math.min(first.value, second.value);
                         const currentWinner = pairs.find(pair => pair.value === winnerValue)
+                        
                         winners.push(currentWinner)
-                        console.log('wiiners', winners)
-
-                        const looserValue = Math.max(first.value, second.value)
-                        const currentLooser = pairs.find(pair => pair.value === looserValue)
-                        loosers.push(currentLooser);
-                        console.log('loosers', loosers);
+                        this.$store.dispatch('updateNextRound', winners) 
                     })
-
-                    this.$store.dispatch('updateNextRound', loosers); // only update looser values because winnervalue is always 0
                 }
 
-                // find key to winners
-                // current result += result in store
-                this.$store.dispatch('updateTotalResults', loosers); 
                 this.currentRoundResult = []; // empty array for next round     
             },
             
@@ -131,7 +119,8 @@
                 })
                 
                 /* then remove values for next round */
-                this.resultValues = []                
+                this.resultValues = []      
+                this.currentRoundResult = []          
             },
 
             skipairKey(pair) {
@@ -143,7 +132,6 @@
 
 <style>
     .nextRound{
-        
         display: flex;
         flex-direction: column;
         align-items: center;
