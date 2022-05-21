@@ -16,9 +16,9 @@
           <span class="skipairs__user-product">Verdi</span>
         </div>
 
-        <div class="pair" v-for="index in test.numberOfPairs">
-            <label for="product">{{ index }}</label>
-            <input type="text" name="product" placeholder="Skriv inn resultat" v-model="valueFirstRound[index -1]">
+        <div class="pair" v-for="(pair, index) in test.addedSkipairs">
+            <label for="product">{{ pair._key }}</label>
+            <input type="text" name="product" placeholder="Skriv inn resultat" v-model="valueFirstRound[index]">
         </div>
 
       <RouterLink :to="{ name: 'nesteRunde', params: {runde: 'runde' } }" @click="nextRound">

@@ -8,8 +8,8 @@
         </div>
 
         <div v-for="(pair, index) in nextRound" class="pair">
-            <label for="product" class="skipairs__number">{{ index +1 }}</label>
-            <input ref="product" type="text" name="product" placeholder="Skriv inn resultat" v-model="inputValues[index]">
+            <label for="product" class="skipairs__number">{{ skipairKey(pair) }}</label>
+            <input ref="product" type="text" name="product" placeholder="Skriv inn resultat" v-model="resultValues[index]">
         </div>
 
         <RouterLink :to="{ name: 'nesteRunde', params: {runde: `runde-${round}` } } ">
@@ -22,6 +22,10 @@
     import Banner from '../components/Banner.vue';
 
     export default {
+        created() {
+            console.log('next round', this.nextRound)
+        },
+
         beforeRouteUpdate(to, from, next) {
             this.makeSkipairObjects();
             this.findWinners() 
@@ -32,8 +36,8 @@
 
         data(){
             return {
-                inputValues: [],
-                currentRoundResult: [],
+                resultValues: [],    // results from current test 
+                currentRoundResult: [], // temp array for current round reuslt
                 round: 2
             }
         },
@@ -45,7 +49,7 @@
         computed: {
             nextRound() {
                 return this.$store.getters.getNextRound;
-            }, 
+            }
         },
 
         methods: {
@@ -59,18 +63,17 @@
             },
 
             makeSkipairObjects() {
-                this.inputValues.forEach((value, index) => {
+                this.resultValues.forEach((value, index) => {
                     let valueNumber = parseInt(value)
                    
-                    const tempSkipair = {
+                    const skipairObject = {
                         _key: this.nextRound[index]._key,
                         product: this.nextRound[index].product,
                         value: valueNumber,
                         result: this.nextRound[index].result += valueNumber
                     }
 
-                    this.currentRoundResult.push(tempSkipair); 
-                    console.log('current round index: ', this.currentRoundResult)
+                    this.currentRoundResult.push(skipairObject); 
                 })
             },
 
@@ -123,12 +126,16 @@
             
             emptyInputFields() {
                 /* reset for next round */
-                this.inputValues.forEach((field, index) => {  
-                    this.inputValues[index] = '';
+                this.resultValues.forEach((field, index) => {  
+                    this.resultValues[index] = '';
                 })
                 
                 /* then remove values for next round */
-                this.inputValues = []                
+                this.resultValues = []                
+            },
+
+            skipairKey(pair) {
+                return Object.values(pair)[0]
             }
         }
     }
