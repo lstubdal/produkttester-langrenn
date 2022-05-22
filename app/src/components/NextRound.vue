@@ -72,7 +72,6 @@
                 })
 
                 // update current result to total result in skipairs
-                console.log('current roundResult', this.currentRoundResult)
                 this.$store.dispatch('updateTotalResults', this.currentRoundResult)
             },
 
@@ -96,6 +95,7 @@
                 
               
                 if (splittedPairs.length < 2 ) {
+
                     this.$router.push({ name: 'results', params: 'results' }) // move to results view after the last test
                     
                 } else {

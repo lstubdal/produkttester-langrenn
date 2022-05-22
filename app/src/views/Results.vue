@@ -8,7 +8,7 @@
       </div>
 
       <div class="results__result" v-for="(result, index) in results">
-          <span class="results__result-text">{{ index +1 }}</span>
+          <span class="results__result-text">{{ result._key }}</span>
           <span class="results__result-text results__result-text--large">{{ result.product }}</span>
           <span class="results__result-text">{{ result.result }}</span>
       </div>
