@@ -1,0 +1,13 @@
+*[_type == 'test'] | order(_createdAt desc)[0] {
+    _id,
+    date,
+    name,
+    place,
+    snowdata,
+    temperature,
+    numberOfPairs,
+    addedSkipairs,
+    slug {
+        current
+    }
+}
