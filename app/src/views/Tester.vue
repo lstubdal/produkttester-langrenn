@@ -12,7 +12,7 @@
         
         <!-- make comp -->
         <div class="skipairs__user-title">
-          <span class="skipairs__user-number">Nr. </span>
+          <span class="skipairs__user-number">Par</span>
           <span class="skipairs__user-product">Verdi</span>
         </div>
 
@@ -42,6 +42,8 @@
 
       async created() {
        await this.sanityFetchTest(query); // fetch new test
+       this.$store.dispatch('setTestId', this.test._id)
+       
       },
 
       data() {
