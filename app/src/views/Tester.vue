@@ -8,7 +8,7 @@
 
       <!-- tester input -->
      <section v-if="$route.name === 'tester'" class="tester__skipairs">
-        <Banner :bannerTitle="'TEST'" />
+        <Banner :bannerTitle="'TEST 1'" />
         
         <!-- make comp -->
         <div class="skipairs__user-title">
@@ -21,7 +21,7 @@
             <input type="text" name="product" placeholder="Skriv inn resultat" v-model="resultValues[index]">
         </div>
 
-      <RouterLink :to="{ name: 'nesteRunde', params: {runde: 'runde' } }" @click="nextRound">
+      <RouterLink :to="{ name: 'nesteRunde', params: {runde: 'runde-2' } }" @click="nextRound">
         <button class="pageButton">NEXT</button>
       </RouterLink>
     </section>
@@ -32,7 +32,7 @@
     import Header from '../components/Header.vue';
     import LoadingScreen from '../components/LoadingScreen.vue';
     import viewMixin from '../mixins/viewMixin';
-    import query from '../groq/newTest.groq?raw';
+    import query from '../groq/currentTest.groq?raw';
     import NextRound from '../components/NextRound.vue';
     import Banner from '../components/Banner.vue';
     import Information from '../components/Information.vue'
@@ -43,7 +43,6 @@
       async created() {
        await this.sanityFetchTest(query); // fetch new test
        this.$store.dispatch('setTestId', this.test._id)
-       
       },
 
       data() {
@@ -92,6 +91,10 @@
         },
 
         nextRound() {
+          if (this.test.addedSkipairs.length <= 2) {
+            this.$router.push({ name: 'results', params: 'results' }) // if only 2 skipairs tested
+          }
+
           const testedPairs =  this.splitIntoPairs(this.createSkipairObjects()) // split tempArray into tested pairs to compare and find winners
           const currentWinners = []  // all results = 0 so far
 
