@@ -2,7 +2,7 @@
   <div class="results">
       <Banner :bannerTitle="'RESULTATER'" />
       <div class="results__headline">
-          <span class="results__headline-text ">Nr.</span>
+          <span class="results__headline-text ">Par</span>
           <span class="results__headline-text results__headline-text--large">Product</span>
           <span class="results__headline-text ">Result</span>
       </div>
@@ -13,16 +13,24 @@
           <span class="results__result-text">{{ result.result }}</span>
       </div>
 
-      <button class="pageButton pageButton--results">Lagre test</button>
+      <button class="pageButton pageButton--results" @click="updateResultsSanity">Lagre test</button>
   </div>
 </template>
 
 <script>
     import Banner from '../components/Banner.vue';
+    import viewMixin from '../mixins/viewMixin';
+    import query from '../groq/newTest.groq?raw';
+import sanity from '../sanity';
 
     export default {
+        mixins: [viewMixin],
+
         async created() {
-            this.sortResultsASC(); // winner skipair first
+            if (this.results) {
+                this.sortResultsASC(); // winner skipair first
+            } 
+            await this.sanityFetchTest(query); // fetch current test
         },
 
         components: {
@@ -32,6 +40,10 @@
         computed: {
             results(){
                 return this.$store.getters.getTotalResults;
+            },
+
+            testId() {
+                return this.$store.getters.getTestId;
             }
         },
 
@@ -48,6 +60,37 @@
                     }
                 }
                 return this.results.sort((current, next) => compare(current, next) * asc)
+            },
+
+            resultsArrayToSanity() {
+                // remove 'current value' attribute in skipairs when updating to sanity
+                const resultsToSanity = []
+                this.results.forEach(pair => {
+                    const sanityPair = {
+                        _key: pair._key,
+                        product: pair.product,
+                        result: pair.result
+                    }
+                    resultsToSanity.push(sanityPair);
+                })
+                return resultsToSanity;
+            },
+
+            updateResultsSanity() {
+                this.createOrUpdateTest(
+                    this.testId,
+                    this.test.name,
+                    this.test.place,
+                    this.test.date,
+                    this.test.temperature,
+                    this.test.snowdata,
+                    this.test.numberOfPairs,
+                    this.resultsArrayToSanity(),
+                    this.test.slug.current
+                );
+/*                 for (let index = 0; index < this.resultsArrayToSanity().length; index++) {
+                    this.updateTotalResultsSanity(this.testId, this.resultsArrayToSanity(), index);
+                } */
             }
         }
     }
@@ -60,6 +103,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        font-family: var(--main-font);
     }
 
     .results__headline-text, .results__result-text {
