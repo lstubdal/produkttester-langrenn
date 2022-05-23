@@ -1,6 +1,5 @@
 <template>
     <Header :page="'waxTech'" />
-
     <div class="waxTech">
         <div class="waxTech__input">
             <label for="testname">Testnavn</label>
@@ -22,7 +21,6 @@
                 <label for="temperature">Temperatur</label>
                 <input type="text" id="temperature" name="temperature" v-model="temperature" placeholder="Celcius">   
             </div>
-
         </div>
 
         <!-- SNOWDATA -->
@@ -79,7 +77,7 @@
         </section>
 
         <RouterLink :to="{ name: 'tester'}">
-            <button @click="createTestSanity" class="pageButton">NESTE</button>
+            <button @click="createTestSanity" class="pageButton">NESTE</button> 
         </RouterLink>
     </div>
 </template>
@@ -122,6 +120,10 @@
                 if (this.selectedTestType === 'Klassisk' || this.selectedTestType === 'Skøyting' || this.selectedTestType === 'Skibytte' ) {
                     return true;
                 } return false
+            },
+
+            testId() {
+                return this.$store.getters.getTestId;
             }
         },
 
@@ -188,7 +190,8 @@
 
             createTestSanity() {
                 /* create new testdocument to sanity */
-                /* this.createNewTest(
+                this.createOrUpdateTest(
+                    this.testId,
                     this.name, 
                     this.place, 
                     this.date,
@@ -197,9 +200,14 @@
                     this.numberOfpairs,
                     this.createSkipairObjects(),
                     this.createSlug()
-                ); */
+                );
             }
-        }
+        },
+
+        beforeRouteEnter(to, from, next) {
+            
+            next()
+        },
     }
 </script>
 
@@ -297,8 +305,5 @@
             display: flex;
             flex-direction: row;
         }
-    }
-
-
-    
+    } 
 </style>

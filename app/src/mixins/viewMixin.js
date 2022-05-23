@@ -29,10 +29,10 @@ export default {
                         current: slug
                     }
                 }
-
                 sanity.create(newTest)
                         .then((res => {
                             console.log(`test was created, document ID is ${res._id}`)
+                            this.$router.push({ name: 'results', params: 'runde-2' })
                         }))
             } else {
                 const updateTest = {
