@@ -3,7 +3,7 @@
         <Banner :bannerTitle="`TEST ${round}`" />
 
         <div class="skipairs__user-title">
-          <span class="skipairs__user-number">Nr. </span>
+          <span class="skipairs__user-number">Par</span>
           <span class="skipairs__user-product">Verdi</span>
         </div>
 
@@ -12,9 +12,10 @@
             <input ref="product" type="text" name="product" placeholder="Skriv inn resultat" v-model="resultValues[index]">
         </div>
 
-        <RouterLink :to="{ name: 'nesteRunde', params: {runde: `runde-${round}` } } ">
-            <button @click="goToNextRound" class="pageButton">next</button>
-        </RouterLink>
+        <!-- <RouterLink :to="{ name: 'nextRound', params: {round: `runde-${round}` } } "> -->
+        <div class="inputTestError"></div>
+        <button @click="goToNextRound" class="pageButton">next</button>
+       <!--  </RouterLink> -->
     </div>
 </template>
 
@@ -22,10 +23,6 @@
     import Banner from '../components/Banner.vue';
 
     export default {
-        created() {
-            console.log('next round', this.nextRound)
-        },
-
         beforeRouteUpdate(to, from, next) {
             this.makeSkipairObjects();
             this.findWinners() 
@@ -54,8 +51,25 @@
 
         methods: {
             goToNextRound() {
-                this.round += 1; // increase round nubmer for slug
+                if (this.validationTestInput()) {
+                    this.round += 1; // increase round nubmer for slug
+                    this.$router.push({ name: 'nextRound', params: {round: `runde-${this.round}`} })
+                } else {
+                    console.log('nope');
+                }
+                
 
+            },
+
+            validationTestInput() {
+                const inputField = document.querySelector('.testInputError')
+                if (this.resultValues.length === 0) {
+                    inputField.innerText = 'Obs, fyll inn alle felter';
+                    inputField.style.display = 'block';
+                    return false
+                }
+                inputField.style.display = 'none';
+                return true
             },
 
             makeSkipairObjects() {
@@ -76,7 +90,7 @@
             },
 
             splitIntoPairs() {
-                const splittetPairs = []
+                let splittetPairs = []
                 if (this.currentRoundResult.length < 2) {
                     splittetPairs = this.currentRoundResult
                 } else {
@@ -84,7 +98,8 @@
                     for (let index = 0; index <  this.currentRoundResult.length; index+=2) {
                         splittetPairs.push([this.currentRoundResult[index], this.currentRoundResult[index+1]])
                     }
-                }  
+                }
+
                 return splittetPairs
                 }      
             },
@@ -93,9 +108,7 @@
                 const winners = []
                 const splittedPairs = this.splitIntoPairs()
                 
-              
-                if (splittedPairs.length < 2 ) {
-
+                if (splittedPairs.length <= 2 ) {
                     this.$router.push({ name: 'results', params: 'results' }) // move to results view after the last test
                     
                 } else {
@@ -108,7 +121,6 @@
                         this.$store.dispatch('updateNextRound', winners) 
                     })
                 }
-
                 this.currentRoundResult = []; // empty array for next round     
             },
             
