@@ -9,21 +9,29 @@
       <!-- tester input -->
      <section v-if="$route.name === 'tester'" class="tester__skipairs">
         <Banner :bannerTitle="'TEST 1'" />
+
+        <div class="pair" v-for="(pairs, indexResults) in splittedSkiparis">
+          <SkipairsHeadline  />
+          <div v-for="(pair, index) in pairs">
+            <div class="pair__input">
+              <label for="product">{{ pairs[index]._key }}</label>
+              <input type="text" name="product" placeholder="Skriv inn resultat" v-model="resultValues[indexResults]">
+            </div>
+          </div> 
+          <div class="inputError testInputError"></div>  
+        </div>
         
-        <!-- make comp -->
-        <div class="skipairs__user-title">
-          <span class="skipairs__user-number">Par</span>
-          <span class="skipairs__user-product">Verdi</span>
-        </div>
+        <!-- <div class="pair" v-for="(pair, index) in test.addedSkipairs">
+            <SkipairsHeadline  />
+            <div class="pair__input">
+              <label for="product">{{ pair._key }}</label>
+              <input type="text" name="product" placeholder="Skriv inn resultat" v-model="resultValues[index]">
+            </div>      
+        </div> -->
 
-        <div class="pair" v-for="(pair, index) in test.addedSkipairs">
-            <label for="product">{{ pair._key }}</label>
-            <input type="text" name="product" placeholder="Skriv inn resultat" v-model="resultValues[index]">
-        </div>
-
-      <RouterLink :to="{ name: 'nesteRunde', params: {runde: 'runde-2' } }" @click="nextRound">
-        <button class="pageButton">NEXT</button>
-      </RouterLink>
+      <!-- <RouterLink :to="{ name: 'nesteRunde', params: {runde: 'runde-2' } }" > -->
+        <button @click="nextRound" class="pageButton">NEXT</button>
+      <!-- </RouterLink> -->
     </section>
   </div>
 </template>
@@ -35,7 +43,8 @@
     import query from '../groq/currentTest.groq?raw';
     import NextRound from '../components/NextRound.vue';
     import Banner from '../components/Banner.vue';
-    import Information from '../components/Information.vue'
+    import Information from '../components/Information.vue';
+    import SkipairsHeadline from '../components/SkipairsHeadline.vue';
 
     export default {
       mixins: [viewMixin],
@@ -57,7 +66,14 @@
         NextRound,
         Banner,
         Information,
-        LoadingScreen
+        LoadingScreen,
+        SkipairsHeadline
+      },
+
+      computed: {
+        splittedSkiparis() {
+          return this.splitIntoPairs(this.test.addedSkipairs);
+        }
       },
 
       methods: {
@@ -90,8 +106,23 @@
           }
         },
 
+        validationTestInput() {
+          const inputField = document.querySelector('.testInputError')
+          if (this.resultValues.length === 0) {
+            inputField.innerText = 'Obs, fyll inn på alle felter';
+            inputField.style.display = 'block';
+            return false
+          }
+          inputField.style.display = 'block';
+          return true 
+          
+        },
+
         nextRound() {
-          if (this.test.addedSkipairs.length <= 2) {
+          
+          if (this.validationTestInput()) {
+            this.$router.push({ name: 'nextRound', params: {round: 'runde-2'} })
+            /*  if (this.test.addedSkipairs.length <= 2) {
             this.$router.push({ name: 'results', params: 'results' }) // if only 2 skipairs tested
           }
 
@@ -107,8 +138,11 @@
 
           })
           this.$store.dispatch('updateNextRound', currentWinners); // save winners from current round in store to access to next round
-          this.$store.dispatch('increaseRoundIndex')
-        }
+          this.$store.dispatch('increaseRoundIndex') */
+          } else {
+            console.log('nope')
+          }
+        } 
       }
     }
 </script>
@@ -138,5 +172,9 @@
   .tester__input {
     display: flex;
     flex-direction: column;
+  }
+
+  .testInputError {
+    display: none;
   }
 </style>

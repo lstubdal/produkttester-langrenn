@@ -4,7 +4,7 @@ export default {
             rounds: [],
             totalResults: null,
             roundIndex: 0,
-            testtId: ''
+            testId: ''
         }
     },
 
@@ -18,7 +18,7 @@ export default {
         },
 
         getTestId(state) {
-            return state.testtId;
+            return state.testId;
         }
     },
 
@@ -62,16 +62,16 @@ export default {
                                 for (let index = winnerKey; index <= state.totalResults.length; index++) {
                                     state.totalResults[index-1].result += pair.result
                                 }
-                             // add difference from winnerpair to skiapirs with key > winnerkey 
                             } else {
-                                for (let index = 4; index < state.totalResults.length; index--) {
+                                // add difference from winnerpair to skiapirs with lowest key
+                                const mark = state.totalResults.length / 2;
+                                for (let index = mark; index < state.totalResults.length; index--) {
                                     console.log(pair.result);
                                     
                                     if (index === 0) {
                                         console.log('ferdig', state.totalResults)
                                         return
                                     }
-
                                     state.totalResults[index-1].result += pair.result
                                 }
                             } 
@@ -91,10 +91,6 @@ export default {
 
             function lastRound(currentResults) {
                 return currentResults.length === 2;
-            }
-
-            function lowerKeyValue(pair) {
-                
             }
         },
 
