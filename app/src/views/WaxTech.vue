@@ -3,23 +3,27 @@
     <div class="waxTech">
         <div class="waxTech__input">
             <label for="testname">Testnavn</label>
-            <input type="text" id="testname" name="testname" placeholder="Skriv inn navn på test" v-model="name">   
+            <input type="text" name="testname" placeholder="Skriv inn navn på test" v-model="name" required>
+            <div class="inputError errorName"></div> 
         </div>
 
         <div class="waxTech__input--responsive">
             <div class="waxTech__input">
                 <label for="place">Sted</label>
-                <input type="text" id="place" name="place" v-model="place" placeholder="Skriv inn sted for test">   
+                <input type="text" id="place" name="place" v-model="place" placeholder="Skriv inn sted for test">
+                <div class="inputError errorPlace"></div>    
             </div>
 
             <div class="waxTech__input">
                 <label for="date">Dato</label>
-                <input type="date" id="date" name="date" v-model="date">   
+                <input type="date" id="date" name="date" v-model="date">
+                <div class="inputError errorDate"></div>   
             </div>
 
             <div class="waxTech__input">
                 <label for="temperature">Temperatur</label>
-                <input type="text" id="temperature" name="temperature" v-model="temperature" placeholder="Celcius">   
+                <input type="text" id="temperature" name="temperature" v-model="temperature" placeholder="Celcius">
+                <div class="inputError errorTemperature"></div>   
             </div>
         </div>
 
@@ -27,6 +31,7 @@
         <section class="snowData">
             <h3>Snødata</h3>
             <span>Kryss av type test som skal gjennomføres</span>
+            <div class="inputError errorTestType"></div>
 
             <div class="snowData__types" >
                 <div class="snowData__type" v-for="(type, index) in skiTypes" >
@@ -53,6 +58,7 @@
             <h3>LEGG INN SKI </h3>
             <div class="skipairs__number">
                 <label for="numberOfpairs">Hvor mange skipar skal testes?</label>
+                <div class="inputError errorNumberOfSkipairs"></div>
 
                 <select name="numberOfpairs" id="addSkis" @change="getNumberOfPairs">
                     <option value="selectPlaceholder">Velg antall</option>
@@ -68,17 +74,17 @@
                 </div>
 
                 <div class="pairs" v-for='index in numberOfpairs' :key='index'>
-                    <div class="pair">
-                        <label for="nr">{{ index }}</label>
-                        <input type="text" id="nr" name="pair" v-model="products[index-1]" placeholder="Skriv inn produkt">
+                    <div class="pair--waxTech">
+                        <label class="skipairs__user-number" for="nr">{{ index }}</label>
+                        <input type="text" name="pair" v-model="products[index-1]" placeholder="Skriv inn produkt">
                     </div>
                 </div>
+                <div class="inputError errorProduct"></div>
             </div>
         </section>
 
-        <RouterLink :to="{ name: 'tester'}">
-            <button @click="createTestSanity" class="pageButton">NESTE</button> 
-        </RouterLink>
+        <button @click="createTestSanity" class="pageButton">NESTE</button>
+        <div class="inputError errorPage"></div>
     </div>
 </template>
 
@@ -94,7 +100,7 @@
                 name: '',
                 place: '',
                 date: '',
-                temperature: '',
+                temperature: null,
                 skiTypes: ['Klassisk', 'Skøyting', 'Skibytte'],
                 selectNumberOfPairs: [2,4,6,8,10,12],
                 selectedTestType: '',
@@ -103,7 +109,7 @@
                 products: [], // collect skiproducts
                 snowdata: '',
                 clicked: false,
-                numberOfpairs: ''
+                numberOfpairs: null
             }
         },
 
@@ -152,29 +158,18 @@
                 return snowdata; 
             },
 
-            generateRandomKey() {
-                let key = '';
-                const char = 'abcdefghijklmnopqrstuvwxyz0123456789';
-                for (let index = 0; index < 7; index++) {
-                    key += char.charAt(Math.random()*  7);
-                }
-                return key
-            },
-
             createSkipairObjects() {
                 const addedSkipairs =  []
                 this.products.forEach((product, index) => {
                     let key = JSON.stringify(index+1);
 
                     const skipairWithProduct = {
-                        product: product, // 
+                        product: product,
                         result: 0,
-                        _key: key // this.generateRandomKey()
+                        _key: key 
                     }
-
                     addedSkipairs.push(skipairWithProduct)
                     });
-
                     return addedSkipairs
             },
 
@@ -184,30 +179,125 @@
             },
 
             getParsedNumberOfPairs() {
-                const parsedNumber = parseInt(this.numberOfpairs)
-                return parsedNumber
+                return parseInt(this.numberOfpairs)
+            },
+
+            validationName(inputField) {
+                inputField = document.querySelector('.errorName');
+                if (this.name === '') {
+                    inputField.innerText = 'Mangler navn!';
+                    inputField.style.display = 'block';
+                } else {
+                    inputField.style.display = 'none';
+                    return true
+                }
+            },
+
+            validationPlace(inputField) {
+                inputField = document.querySelector('.errorPlace');
+                if (this.place === '') {
+                    inputField.innerText = 'Mangler sted!'
+                    inputField.style.display = 'block'
+                    return false
+                    
+                }
+                inputField.style.display = 'none';
+                return true
+            },
+
+            validationDate(inputField) {
+                inputField = document.querySelector('.errorDate');
+                if (this.date === '') {
+                    inputField.innerText = 'Mangler dato!';
+                    inputField.style.display = 'block';
+                    return false
+                }
+                inputField.style.display = 'none'; 
+                return true
+            },
+
+            validationTemperature(inputField) {
+                inputField = document.querySelector('.errorTemperature');
+                if (this.temperature === null) {
+                    inputField.innerText = 'Mangler temperatur!';
+                    inputField.style.display = 'block';
+                    return false
+
+                } else if (this.temperature.match(/[^0-9,.]/)) { // check if temp contains letters
+                    inputField.innerText = 'Obs, temperatur Kan ikke innholde bokstaver';
+                    inputField.style.display = 'block';
+                    return false
+                }
+                inputField.style.display = 'none'; 
+                return true
+            },
+
+            validationSkiType(inputField) {
+                inputField = document.querySelector('.errorTestType');
+                if (this.selectedTestType === '') {
+                    inputField.innerText = 'Mangler testtype'
+                    inputField.style.display = 'block'
+                    return false
+                } else {
+                    if (this.selectedTestType === 'Klassisk' && this.inTrack === '') {
+                        inputField.innerText = "Manger data for 'i spor'"
+                        inputField.style.display = 'block'
+                        return false
+                    } else if (this.selectedTestType === 'Skøyting' && this.outsideTrack === '') {
+                        inputField.innerText = "Mangler data for 'utenfor spor'"
+                        inputField.style.display = 'block'
+                        return false
+                    } else {
+                        if (this.selectedTestType === 'Skibytte' && this.inTrack === '' && this.outsideTrack === '') {
+                            inputField.innerText = "Mangler data 'i/ utenfor spor'";
+                            inputField.style.display = 'block';
+                            return false
+                        }
+                    }
+                }
+                inputField.style.display = 'none';
+                return true 
+            },
+
+            validationSkipairs(inputField) {
+                inputField = document.querySelector('.errorNumberOfSkipairs');
+                inputField = document.querySelector('.errorProduct');
+                if (this.numberOfpairs === null) {
+                    inputField.innerText = 'Mangler antall skipar som skal testes';
+                    inputField.style.display = 'block';
+                    return false
+                } else if (this.numberOfpairs !== null && this.products.length === 0) {
+                    inputField.innerText = 'Mangler et produkt på skipar';
+                    inputField.style.display = 'block';
+                    return false
+                }
+                inputField.style.display = 'none';
+                return true
             },
 
             createTestSanity() {
-                /* create new testdocument to sanity */
-                this.createOrUpdateTest(
-                    this.testId,
-                    this.name, 
-                    this.place, 
-                    this.date,
-                    this.getTemperature(),
-                    this.createSnowDataObject(),
-                    this.numberOfpairs,
-                    this.createSkipairObjects(),
-                    this.createSlug()
-                );
+                let inputField = null
+                if (this.validationName(inputField) && this.validationName(inputField) && this.validationPlace(inputField) && this.validationDate(inputField) && this.validationTemperature(inputField) && this.validationSkiType(inputField)) {
+                    /* create new testdocument to sanity */
+                    this.createOrUpdateTest(
+                        this.testId,
+                        this.name, 
+                        this.place, 
+                        this.date,
+                        this.getTemperature(),
+                        this.createSnowDataObject(),
+                        this.numberOfpairs,
+                        this.createSkipairObjects(),
+                        this.createSlug()
+                    );
+                 
+                } else {
+                    inputField = document.querySelector('.errorPage');
+                    inputField.innerText = 'Alle felt er ikke fylt inn';
+                    inputField.style.display = 'block';
+                }  
             }
-        },
-
-        beforeRouteEnter(to, from, next) {
-            
-            next()
-        },
+        }
     }
 </script>
 
@@ -298,6 +388,10 @@
 
     .snowData__value ::placeholder  {
         opacity: 50%;
+    }
+
+    .errorName, .errorPlace, .errorDate, .errorTemperature, .errorTestType, .errorNumberOfSkipairs, .errorProduct, .errorPage {
+        display: none;
     }
 
     @media screen and (min-width: 800px) {

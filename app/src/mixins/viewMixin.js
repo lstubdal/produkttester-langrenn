@@ -32,7 +32,7 @@ export default {
                 sanity.create(newTest)
                         .then((res => {
                             console.log(`test was created, document ID is ${res._id}`)
-                            this.$router.push({ name: 'results', params: 'runde-2' })
+                            this.$router.push({ name: 'tester' })
                         }))
             } else {
                 const updateTest = {
@@ -49,30 +49,12 @@ export default {
                         current: slug
                     }
                 }
-
                 sanity.createOrReplace(updateTest)
                         .then((res => {
-                            console.log('TEST UPDATED')
+                            console.log(`test updated ${res._id}`)
                         }))
 
             }
-        },
-
-/*         updateTotalResultsSanity(testID, resultsArray, index) {
-             sanity.patch(testID) 
-                   .insert('replace', `addedSkipairs[${index}]`, [{
-                       _key: resultsArray[index]._key,
-                       product: resultsArray[index].product,
-                       result: resultsArray[index].result
-                    }])
-                   .commit() 
-                   .then((updatedResult) => {
-                       console.log('oppdatert!', updatedResult)
-                   })
-                   .catch((err) => {
-                       console.log('feil!!', err);
-                   })
-  
-        } */
+        }
     }
 }
