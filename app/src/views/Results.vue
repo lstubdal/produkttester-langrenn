@@ -20,8 +20,7 @@
 <script>
     import Banner from '../components/Banner.vue';
     import viewMixin from '../mixins/viewMixin';
-    import query from '../groq/newTest.groq?raw';
-import sanity from '../sanity';
+    import query from '../groq/currentTest.groq?raw';
 
     export default {
         mixins: [viewMixin],
@@ -73,7 +72,7 @@ import sanity from '../sanity';
                     }
                     resultsToSanity.push(sanityPair);
                 })
-                return resultsToSanity;
+                return resultsToSanity; // send results in sorted order
             },
 
             updateResultsSanity() {
@@ -85,12 +84,9 @@ import sanity from '../sanity';
                     this.test.temperature,
                     this.test.snowdata,
                     this.test.numberOfPairs,
-                    this.resultsArrayToSanity(),
+                    this.resultsArrayToSanity(), 
                     this.test.slug.current
                 );
-/*                 for (let index = 0; index < this.resultsArrayToSanity().length; index++) {
-                    this.updateTotalResultsSanity(this.testId, this.resultsArrayToSanity(), index);
-                } */
             }
         }
     }
@@ -124,6 +120,7 @@ import sanity from '../sanity';
     }
 
     .results__result-text--large {
+        min-width: 110px;
         padding: 5px var(--padding-xlarge)
     }
 
@@ -138,6 +135,8 @@ import sanity from '../sanity';
         color: var(--main-color);
         background-color: var(--light);
         margin: 0.5% 0%;
+        min-width: 80px;
+        text-align: center;
     }
 
     .pageButton--results {

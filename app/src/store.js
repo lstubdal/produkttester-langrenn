@@ -47,6 +47,50 @@ export default {
                             }
                         } 
                     })
+                } else { // last round
+                    if (lastRound(currentResults)) {
+                        currentResults.forEach(pair => {
+                            if (pair.result !== 0 ) {
+                                const winnerKey = parseInt(pair._key) 
+                                const [firstPair, secondPair] = currentResults  // access both pairs to compare key value
+                                const lowestKey = Math.min(firstPair._key, secondPair._key) 
+                                
+                                // add difference from winnerpair to skiapirs with key > winnerkey
+                                if (winnerKey !== lowestKey) {
+                                    console.log('RESULTSS', state.totalResults)
+                                    for (let index = winnerKey; index <= state.totalResults.length; index++) {
+                                        state.totalResults[index-1].result += pair.result
+                                    }
+                                } else {
+                                    // add difference from winnerpair to skiapirs with lowest key
+                                    const mark = state.totalResults.length / 2;
+                                    for (let index = mark; index < state.totalResults.length; index--) {
+                                        console.log(pair.result);
+                                        
+                                        if (index === 0) {
+                                            console.log('ferdig', state.totalResults)
+                                            return
+                                        }
+                                        state.totalResults[index-1].result += pair.result
+                                    }
+                                } 
+                         }  
+                     })      
+                    }
+                 }
+            }
+            
+            /* else {
+                if (state.roundIndex === 1) {
+                    currentResults.forEach(pair => {    //iterate new round values
+                        if (pair.result > 0 && isEven(pair._key)) {
+                            state.totalResults[pair._key -2].result += pair.result; // add value to 'looserpair'
+                        } else {
+                            if (pair.result > 0 && !isEven(pair._key)) {
+                                state.totalResults[pair._key].result += pair.result
+                            }
+                        } 
+                    })
                 }
                 
                 else { // last round
@@ -79,7 +123,7 @@ export default {
                     })      
                    }
                 }
-            }
+            } */
 
             function isEven(key) {
                 return key % 2 === 0;

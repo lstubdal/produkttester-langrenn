@@ -5,7 +5,7 @@ import Tester from './views/Tester.vue';
 import Test from './components/Test.vue';
 
 import Place from './views/Place.vue';
-import WeatherData from './views/WeatherData.vue';
+import Temperature from './views/Temperature.vue';
 import Date from './views/Date.vue';
 
 
@@ -36,8 +36,8 @@ export default [
 		component: Tester,
 		children: [
 			{ 
-				name: 'nesteRunde',
-				path: ':runde', 
+				name: 'nextRound',
+				path: ':round', 
 				component: NextRound
 			},
 			{
@@ -49,13 +49,13 @@ export default [
 	},
 	{
 		name: 'place',
-		path: '/finn-test/place',
+		path: '/finn-test/sted',
 		component: Place
 	},
 	{
-		name: 'weatherData',
-		path: '/finn-test/værdata',
-		component: WeatherData
+		name: 'temperature',
+		path: '/finn-test/temperatur',
+		component: Temperature
 	},
 	{
 		name: 'date',

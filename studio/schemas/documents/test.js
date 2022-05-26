@@ -103,10 +103,10 @@ export default {
             description: 'Fyll inn verdi/smøring på skiparene',
             type: 'array',
             of: [
-                {
+                {   
                     title: 'Skipar',
                     name: 'skipair',
-                    type: 'object',
+                    type: 'object', // object instead of reference bc different each test
                     fields: [
                         {
                             title: 'Produkt',
@@ -119,7 +119,6 @@ export default {
                             type: 'number'
                         }
                     ]
-
                 }
             ],
         },

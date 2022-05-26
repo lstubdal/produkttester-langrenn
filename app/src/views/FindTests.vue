@@ -1,19 +1,21 @@
 <template>
     <Header :page="'tests'" />
     <div class="findTests">
-        <Banner :bannerPage="'findTest'" :bannerTitle="'Finn tester'" class="findTest__banner"/>
+        <Banner :bannerPage="'findTest'" :bannerTitle="'Finn tester'" />
+        
+        <div class="findTests__links">
+            <RouterLink :to="{ name : 'place' }">
+                <button class="pageButton pageButton--findTest">Sted</button>
+            </RouterLink>
 
-        <RouterLink :to="{ name : 'place' }">
-            <button class="pageButton">Sted</button>
-        </RouterLink>
+            <RouterLink :to="{ name : 'temperature' }">
+                <button class="pageButton pageButton--findTest">Temperatur</button>
+            </RouterLink>
 
-        <RouterLink :to="{ name : 'weatherData' }">
-            <button class="pageButton">Værdata</button>
-        </RouterLink>
-
-        <RouterLink :to="{ name : 'date' }">
-            <button class="pageButton">Dato</button>
-        </RouterLink>
+            <RouterLink :to="{ name : 'date' }">
+                <button class="pageButton pageButton--findTest">Dato</button>
+            </RouterLink>
+        </div>
     </div>
 </template>
 
@@ -39,8 +41,20 @@
         background-image: url('/images/background-tests.png');
     }
 
-    .findTest__banner {
-        margin-top: -100px;
-        margin-bottom: var(--margin-large);
+    .findTests__links {
+        height: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    @media screen and (max-width: 800px) {
+        .findTests__links {
+            flex-direction: column;
+        }
+
+        .pageButton--findTest {
+            margin: var(--margin-medium);
+        }
     }
 </style>

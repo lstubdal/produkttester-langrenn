@@ -22,7 +22,7 @@
 
             <div class="waxTech__input">
                 <label for="temperature">Temperatur</label>
-                <input type="text" id="temperature" name="temperature" v-model="temperature" placeholder="Celcius">
+                <input type="number" id="temperature" name="temperature" v-model="temperature" placeholder="Celcius">
                 <div class="inputError errorTemperature"></div>   
             </div>
         </div>
@@ -60,7 +60,7 @@
                 <label for="numberOfpairs">Hvor mange skipar skal testes?</label>
                 <div class="inputError errorNumberOfSkipairs"></div>
 
-                <select name="numberOfpairs" id="addSkis" @change="getNumberOfPairs">
+                <select class="skipairs__selector" name="numberOfpairs" id="addSkis" @change="getNumberOfPairs">
                     <option value="selectPlaceholder">Velg antall</option>
                     <option :value="number" v-for="number in selectNumberOfPairs">{{ number }}</option>
                 </select>
@@ -73,10 +73,10 @@
                     <p class="skipairs__user-product">Produkt</p>
                 </div>
 
-                <div class="pairs" v-for='index in numberOfpairs' :key='index'>
-                    <div class="pair--waxTech">
-                        <label class="skipairs__user-number" for="nr">{{ index }}</label>
-                        <input type="text" name="pair" v-model="products[index-1]" placeholder="Skriv inn produkt">
+                <div v-for='index in numberOfpairs' :key='index'>
+                    <div class="pair">
+                        <label class="pair__number" for="nr">{{ index }}</label>
+                        <input class="pair__product pair__product--waxTech" type="text" name="pair" v-model="products[index-1]" placeholder="Skriv inn produkt">
                     </div>
                 </div>
                 <div class="inputError errorProduct"></div>
@@ -109,7 +109,7 @@
                 products: [], // collect skiproducts
                 snowdata: '',
                 clicked: false,
-                numberOfpairs: null
+                numberOfpairs: ''
             }
         },
 
@@ -140,11 +140,6 @@
 
             getTestType(event) {
                 return this.selectedTestType = event.target.value;
-            },
-
-            getTemperature() {
-               const parsedTemp = parseInt(this.temperature)
-               return parsedTemp
             },
 
             createSnowDataObject() {
@@ -222,12 +217,7 @@
                     inputField.innerText = 'Mangler temperatur!';
                     inputField.style.display = 'block';
                     return false
-
-                } else if (this.temperature.match(/[^0-9,.]/)) { // check if temp contains letters
-                    inputField.innerText = 'Obs, temperatur Kan ikke innholde bokstaver';
-                    inputField.style.display = 'block';
-                    return false
-                }
+                } 
                 inputField.style.display = 'none'; 
                 return true
             },
@@ -284,7 +274,7 @@
                         this.name, 
                         this.place, 
                         this.date,
-                        this.getTemperature(),
+                        this.temperature,
                         this.createSnowDataObject(),
                         this.numberOfpairs,
                         this.createSkipairObjects(),
@@ -318,20 +308,22 @@
         flex-direction: column;
         align-items: center;
         margin: var(--margin-medium);
-        font-size: 1.2em;
+        font-size: 1.5em;
         color: var(--main-color);
     }
 
-
     .waxTech__input input {
-       padding: 3%;
+        width: 240px;
+        height: 40px;
+        padding: var(--padding-small);
+       
        margin-top: 2%;
        border: 1.5px solid var(--main-color);
        border-radius: 2px;
     }
 
     .waxTech__input ::placeholder {
-        font-size: 1em;
+        font-size: 1.2em;
         opacity: 50%;
     }
 
@@ -345,12 +337,16 @@
 
     .snowData h3 {
         padding: var(--padding-small);
-        font-size: 1.2em;
+        font-size: 1.7em;
+    }
+
+    .snowData span {
+        font-size: 1em;
     }
 
     .snowData__checkbox {
-        height: 25px;
-        width: 25px;
+        height: 40px;
+        width: 40px;
         border: 2px solid var(--main-color);
         margin: var(--margin-small);
     }
@@ -363,31 +359,85 @@
     }
 
     .snowData__type {
+        font-size: 1.3em;
         display: flex;
         flex-direction: column;
         padding: var(--padding-medium);
     }
 
     .snowData__values {
-        width: 100%;
+        display: flex;
         font-size: 1em;
     }
 
     .snowData__value {
-        margin: 0px var(--margin-medium) var(--margin-small) ;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0px var(--margin-medium) ;
     }
 
     .snowData__value label  {
-        width: 50%;
+        font-size: 1.2em;
         margin-right: var(--margin-small)
     }
 
     .snowData__input {
-       padding: 1.5%;
+       height: 40px;
+       width: 160px;
+       padding: var(--padding-small);
     }
 
     .snowData__value ::placeholder  {
         opacity: 50%;
+    }
+
+    .skipairs h3 {
+        font-size: 1.7em;
+    }
+
+    .skipairs__number label {
+        font-size: 1.2em;
+    }
+
+    .skipairs__user-title {
+        display: flex;
+        padding: 0.2%;
+        align-items: center;
+        text-align: center;
+        margin-top: var(--margin-small);
+    }
+
+    .skipairs__user-product {
+        flex-grow: 1;
+    }
+
+    .skipairs__user-number {
+        padding: 2% var(--padding-small);
+    }
+
+    .skipairs__user-product {
+        padding: 2% var(--padding-xlarge) ;
+    }
+
+    .skipairs__user-product, .skipairs__user-number, .pair__number, .pair__product {
+        background-color: var(--main-color);
+        color: var(--light);
+        border-radius: var(--button-border);
+        margin: 1%;
+        font-size: 1.2em;
+    }
+
+    .pair__product--waxTech {
+        width: 220px;
+        color: var(--main-color);
+        background-color: var(--light);
+    }
+
+    .skipairs__selector {
+        height: 40px;
+        width: 300px;
+        font-size: 1.3em;
     }
 
     .errorName, .errorPlace, .errorDate, .errorTemperature, .errorTestType, .errorNumberOfSkipairs, .errorProduct, .errorPage {

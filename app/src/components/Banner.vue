@@ -17,7 +17,6 @@
                 type: String
             }
         }
-
     }
 </script>
 
@@ -29,16 +28,17 @@
     }
 
     .banner__title {
-        font-size: 1.5em;
+        font-size: 1.4em;
         background-color: var(--light);
         padding: 1% var(--padding-xlarge);
         border: 2px solid var(--main-color);
         border-radius: 6px;
         color: var(--main-color);
+        text-align: center;
     }
 
     .banner__title--tests {
-        font-size: 1.5em;
+        font-size: 1.4em;
         background-color: var(--light);
         padding: 1% var(--padding-xlarge);
         border-radius: 6px;
@@ -61,5 +61,11 @@
     .banner__line--tests, .banner__line--previousTest {
         border: 1px solid var(--second-color);
         background-color: var(--second-color) ;
+    }
+
+    @media screen and (max-width: 800px) {
+        .banner__title {
+            width: 100%;
+        }
     }
 </style>

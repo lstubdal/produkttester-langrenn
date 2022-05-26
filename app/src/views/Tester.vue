@@ -10,28 +10,17 @@
      <section v-if="$route.name === 'tester'" class="tester__skipairs">
         <Banner :bannerTitle="'TEST 1'" />
 
-        <div class="pair" v-for="(pairs, indexResults) in splittedSkiparis">
+        <div class="tester__skipairs-pairs" v-for="(pairs, indexResults) in splittedSkipairs">
           <SkipairsHeadline  />
           <div v-for="(pair, index) in pairs">
-            <div class="pair__input">
-              <label for="product">{{ pairs[index]._key }}</label>
-              <input type="text" name="product" placeholder="Skriv inn resultat" v-model="resultValues[indexResults]">
+            <div class="pair">
+              <label class="pair__number" for="product">{{ pair._key }}</label>
+              <input class="pair__product pair__product--tester" type="number" name="product" placeholder="Skriv inn resultat" v-model="splittedSkipairs[indexResults][index].currentResult"> 
             </div>
           </div> 
-          <div class="inputError testInputError"></div>  
         </div>
-        
-        <!-- <div class="pair" v-for="(pair, index) in test.addedSkipairs">
-            <SkipairsHeadline  />
-            <div class="pair__input">
-              <label for="product">{{ pair._key }}</label>
-              <input type="text" name="product" placeholder="Skriv inn resultat" v-model="resultValues[index]">
-            </div>      
-        </div> -->
-
-      <!-- <RouterLink :to="{ name: 'nesteRunde', params: {runde: 'runde-2' } }" > -->
+        <div class="inputError errorTestInput"></div>
         <button @click="nextRound" class="pageButton">NEXT</button>
-      <!-- </RouterLink> -->
     </section>
   </div>
 </template>
@@ -50,13 +39,14 @@
       mixins: [viewMixin],
 
       async created() {
-       await this.sanityFetchTest(query); // fetch new test
+       await this.sanityFetchTest(query); // fetch current test
        this.$store.dispatch('setTestId', this.test._id)
+       this.splittedSkipairs = this.splitIntoPairs(this.test.addedSkipairs);
       },
 
       data() {
         return {
-          resultValues: [],
+          splittedSkipairs: [],
           round: 0,
         }
       },
@@ -70,32 +60,7 @@
         SkipairsHeadline
       },
 
-      computed: {
-        splittedSkiparis() {
-          return this.splitIntoPairs(this.test.addedSkipairs);
-        }
-      },
-
       methods: {
-        /* create temporary array of skipairs with added 'value' attribute */
-        createSkipairObjects() {
-          const tempArray = []
-
-          this.test.addedSkipairs.forEach((pair, index) => {
-            const currentValue = parseInt(this.resultValues[index]) // parse value to number
-            const tempSkipair = {
-              _key: pair._key,
-              product: pair.product,
-              value: currentValue, 
-              result: pair.result  += currentValue // update result (difference) => update this attribute to sanity 
-            }
-            tempArray.push(tempSkipair) 
-          }) 
-
-          this.$store.dispatch('updateTotalResults', tempArray)   // add results from first round to store 
-          return tempArray;   
-        },
-
         splitIntoPairs(tempArray) {
           const splittedIntoPairs = []
           if (tempArray) { // Add: if tempArray.length >= 2 check
@@ -106,41 +71,60 @@
           }
         },
 
-        validationTestInput() {
-          const inputField = document.querySelector('.testInputError')
-          if (this.resultValues.length === 0) {
-            inputField.innerText = 'Obs, fyll inn på alle felter';
-            inputField.style.display = 'block';
-            return false
-          }
-          inputField.style.display = 'block';
-          return true 
+        validationPass() {
+          const inputField = document.querySelector('.errorTestInput')
+          this.splittedSkipairs.forEach(pairs => {
+            pairs.forEach(pair => {
+              if (!pair.currentResult) {
+                inputField.innerText = 'Obs, fyll inn alle feltene';
+                inputField.style.display = 'block';
+                return false
+              } 
+            })
+          })
+          inputField.style.display = 'none';
+          return true
           
         },
 
+        updateResultsStore() {
+          const results = []
+          this.splittedSkipairs.forEach(pairs => {
+              pairs.forEach(pair => {
+                pair.result = pair.currentResult // update current result to total result
+                delete pair.currentResult // remove currentValue attr. for next round (clear inputfields)
+                results.push(pair)
+              })
+            })
+
+            this.$store.dispatch('updateTotalResults', results);
+        },
+      
+
+        findWinners() {        
+          const currentWinners = []
+            this.splittedSkipairs.forEach(pairs => {
+              const [first, second] = pairs // crate pair variable
+              const winnerValue = Math.min(first.currentResult, second.currentResult); // compare first and second to fnd lowest value aka winner
+              const currentWinner = pairs.find(skipair => skipair.currentResult === winnerValue);
+
+              currentWinners.push(currentWinner)  // add currentWinner to array
+            })
+            
+            this.updateResultsStore();
+            this.$store.dispatch('updateNextRound', this.splitIntoPairs(currentWinners)); // save winners from current round in store to access to next round, and split into pairs
+        },
+
         nextRound() {
-          
-          if (this.validationTestInput()) {
-            this.$router.push({ name: 'nextRound', params: {round: 'runde-2'} })
-            /*  if (this.test.addedSkipairs.length <= 2) {
-            this.$router.push({ name: 'results', params: 'results' }) // if only 2 skipairs tested
-          }
+          if (this.validationPass()) {
+            if (this.test.addedSkipairs.length <= 2) {
 
-          const testedPairs =  this.splitIntoPairs(this.createSkipairObjects()) // split tempArray into tested pairs to compare and find winners
-          const currentWinners = []  // all results = 0 so far
-
-          testedPairs.forEach(pairs => {
-            const [first, second] = pairs // crate pair variable
-            const winnerValue = Math.min(first.value, second.value); // compare first and second to fnd lowest value aka winner
-            const currentWinner = pairs.find(skipair => skipair.value === winnerValue);
-
-            currentWinners.push(currentWinner)  // add currentWinner to array
-
-          })
-          this.$store.dispatch('updateNextRound', currentWinners); // save winners from current round in store to access to next round
-          this.$store.dispatch('increaseRoundIndex') */
-          } else {
-            console.log('nope')
+              this.$router.push({ name: 'results', params: 'results' }) // if only 2 skipairs tested
+            } else {
+              this.findWinners();
+              this.$store.dispatch('increaseRoundIndex')
+              this.$router.push({ name: 'nextRound', params: {round: 'runde-2'} })
+            }
           }
         } 
       }
@@ -174,7 +158,18 @@
     flex-direction: column;
   }
 
-  .testInputError {
+  .tester__skipairs-pairs {
+    display: flex;
+    flex-direction: column;
+    margin-top: var(--margin-medium);
+  }
+  .pair__product--tester {
+        width: 220px;
+        color: var(--main-color);
+        background-color: var(--light);
+    }
+
+  .errorTestInput{
     display: none;
   }
 </style>

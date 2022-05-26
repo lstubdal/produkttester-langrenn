@@ -1,46 +1,52 @@
 <template>
     <div class="nextRound">
         <Banner :bannerTitle="`TEST ${round}`" />
-
-        <div class="skipairs__user-title">
-          <span class="skipairs__user-number">Par</span>
-          <span class="skipairs__user-product">Verdi</span>
+        <div v-for="(pairs, index) in skipairs" class="nextRound__skipairs">
+            <SkipairsHeadline />
+            <div v-for="(pair, indexPair) in pairs">
+                <div class="pair">
+                    <label class="pair__number" for="product">{{ skipairKey(pair) }}</label>
+                    <input class="pair__product pair__product--nextRound" type="number" name="product" placeholder="Skriv inn resultat" v-model="skipairs[index][indexPair].currentResult">
+                </div>
+            </div>
         </div>
 
-        <div v-for="(pair, index) in nextRound" class="pair">
-            <label for="product" class="skipairs__number">{{ skipairKey(pair) }}</label>
-            <input ref="product" type="text" name="product" placeholder="Skriv inn resultat" v-model="resultValues[index]">
-        </div>
-
-        <!-- <RouterLink :to="{ name: 'nextRound', params: {round: `runde-${round}` } } "> -->
-        <div class="inputTestError"></div>
-        <button @click="goToNextRound" class="pageButton">next</button>
-       <!--  </RouterLink> -->
+        <div class="errorTestInput-nextRound"></div>
+        <RouterLink :to="{ name: 'nextRound', params: {round: `runde-${round}` } } ">
+            <button @click="goToNextRound" class="pageButton">NEXT</button>
+        </RouterLink>
     </div>
 </template>
 
 <script>
     import Banner from '../components/Banner.vue';
+    import SkipairsHeadline from '../components/SkipairsHeadline.vue';
 
     export default {
-        beforeRouteUpdate(to, from, next) {
-            this.makeSkipairObjects();
-            this.findWinners() 
-            this.emptyInputFields();
-            this.$store.dispatch('increaseRoundIndex'); 
-            next()
+        created() {
+            this.skipairs = this.nextRound; // for v-model
+            console.log('skiapirs', this.skipairs);
         },
 
         data(){
             return {
-                resultValues: [],    // results from current test
-                currentRoundResult: [], // temp array for current round reuslt
+                skipairs: [], 
                 round: 2
             }
         },
 
+        beforeRouteUpdate(to, from, next) {
+            this.findWinners()
+            this.updateResultsStore(); 
+            this.$store.dispatch('increaseRoundIndex');
+            this.skipairs = this.nextRound;
+             
+            next();
+        },
+
         components: {
-            Banner
+            Banner,
+            SkipairsHeadline
         },
 
         computed: {
@@ -51,88 +57,93 @@
 
         methods: {
             goToNextRound() {
-                if (this.validationTestInput()) {
+                if (this.validationPass()) {
+                    
+                    // update total result rembemebr
+                    //this.findWinners()
+                    //this.skipairs = this.nextRound; // for v-model
+                    console.log('skiapirs', this.skipairs); 
+                    /* this.emptyInputFields(); */
+                    
+                    
                     this.round += 1; // increase round nubmer for slug
-                    this.$router.push({ name: 'nextRound', params: {round: `runde-${this.round}`} })
-                } else {
-                    console.log('nope');
-                }
-                
 
+
+                    /* this.$router.push({ name: 'nextRound', params: {round: `runde-${this.round}`}}) */
+                }  
             },
 
-            validationTestInput() {
-                const inputField = document.querySelector('.testInputError')
-                if (this.resultValues.length === 0) {
-                    inputField.innerText = 'Obs, fyll inn alle felter';
-                    inputField.style.display = 'block';
-                    return false
-                }
-                inputField.style.display = 'none';
-                return true
-            },
+            updateResultsStore() {
+                const results = []
+                this.skipairs.forEach((pairs, index) => {
+                    pairs.forEach((pair, indexPair) => {
+                        console.log('SE HER', this.skipairs[index][indexPair])
+                        this.skipairs[index][indexPair].result += this.skipairs[index][indexPair].currentResult
+                        console.log('SE HER etter', this.skipairs[index][indexPair].result)
 
-            makeSkipairObjects() {
-                this.resultValues.forEach((value, index) => {
-                    let currentValue = parseInt(value)
-                   
-                    const skipairObject = {
-                        _key: this.nextRound[index]._key,
-                        product: this.nextRound[index].product,
-                        value: currentValue,
-                        result: this.nextRound[index].result += currentValue // add current value on total
-                    }
-                    this.currentRoundResult.push(skipairObject); 
+                        // 0 + 150
+                        // 150 + 150
+
+                        /* console.log('r', pair.result)
+                        pair.result += pair.currentResult;
+                        console.log('key', pair._key)
+                        console.log('total', pair.result += pair.currentResult);
+                        console.log('cr', pair.currentResult)*/
+                        results.push(pair) 
+                        /* delete pair.currentResult; */
+                        
+
+                    })
                 })
-
-                // update current result to total result in skipairs
-                this.$store.dispatch('updateTotalResults', this.currentRoundResult)
+                console.log('RESULTS!!!!', results)
+                this.$store.dispatch('updateTotalResults', results);
             },
 
-            splitIntoPairs() {
-                let splittetPairs = []
-                if (this.currentRoundResult.length < 2) {
-                    splittetPairs = this.currentRoundResult
+            findWinners() {
+                const winners = []
+                if (this.skipairs.length === 1 ) {
+                    this.$router.push({ name: 'results', params: 'results' }) // move to results view after the last test
+                    
                 } else {
-                    if (this.currentRoundResult.length >= 2) {
-                    for (let index = 0; index <  this.currentRoundResult.length; index+=2) {
-                        splittetPairs.push([this.currentRoundResult[index], this.currentRoundResult[index+1]])
+                    this.skipairs.forEach(pairs => {
+                        const [first, second] = pairs
+                        const winnerValue = Math.min(first.currentResult, second.currentResult);
+                        const currentWinner = pairs.find(pair => pair.currentResult === winnerValue);
+                        
+                        winners.push(currentWinner)
+                    })
+                    this.$store.dispatch('updateNextRound', this.splitIntoPairs(winners)) 
+                }  
+            },
+
+            splitIntoPairs(skipairArray) {
+                let splittetPairs = []
+                if (skipairArray.length < 2) {
+                    splittetPairs = skipairArray
+                } else {
+                    if (skipairArray.length >= 2) {
+                    for (let index = 0; index <  skipairArray.length; index+=2) {
+                        splittetPairs.push([skipairArray[index], skipairArray[index+1]])
                     }
                 }
 
                 return splittetPairs
                 }      
             },
-
-            findWinners() {
-                const winners = []
-                const splittedPairs = this.splitIntoPairs()
-                
-                if (splittedPairs.length <= 2 ) {
-                    this.$router.push({ name: 'results', params: 'results' }) // move to results view after the last test
-                    
-                } else {
-                        splittedPairs.forEach(pairs => {
-                        const [first, second] = pairs
-                        const winnerValue = Math.min(first.value, second.value);
-                        const currentWinner = pairs.find(pair => pair.value === winnerValue)
-                        
-                        winners.push(currentWinner)
-                        this.$store.dispatch('updateNextRound', winners) 
-                    })
-                }
-                this.currentRoundResult = []; // empty array for next round     
-            },
             
-            emptyInputFields() {
-                /* reset for next round */
-                this.resultValues.forEach((field, index) => {  
-                    this.resultValues[index] = '';
+            // move function to store?
+            validationPass() {
+                const inputField = document.querySelector('.errorTestInput-nextRound');
+                this.skipairs.forEach(pairs => {
+                    pairs.forEach(pair => {
+                        if (!pair.currentResult) {
+                            inputField.innerText = 'Obs, fyll inn alle feltene';
+                            inputField.style.display = 'block';
+                        }
+                    })
                 })
-                
-                /* then remove values for next round */
-                this.resultValues = []      
-                this.currentRoundResult = []          
+                inputField.style.display = 'none';
+                return true
             },
 
             skipairKey(pair) {
@@ -143,10 +154,24 @@
 </script>
 
 <style>
-    .nextRound{
+    .nextRound {
         display: flex;
         flex-direction: column;
         align-items: center;
         margin: var(--margin-large) 0px;
+    }
+    
+    .nextRound__skipairs {
+        margin-top: var(--margin-medium);
+    }
+
+    .pair__product--nextRound {
+        width: 220px;
+        color: var(--main-color);
+        background-color: var(--light);
+    }
+
+    .inputTestError-nextRound {
+        display: none;
     }
 </style>

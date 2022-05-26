@@ -3,16 +3,15 @@
         <p class="loading__title">Henter data</p>
 
         <div class="loading__mans">
-            <img src="/icons/loadingMan.svg" alt="little man on skis" class="loading__man man-1">
-            <img src="/icons/loadingMan.svg" alt="little man on skis" class="loading__man man-2">
-            <img src="/icons/loadingMan.svg" alt="little man on skis" class="loading__man man-3">
+            <img src="/images/loadingMan.svg" alt="man" class="loading__man man-1">
+            <img src="/images/loadingMan.svg" alt="man" class="loading__man man-2">
+            <img src="/images/loadingMan.svg" alt="man" class="loading__man man-3">
         </div>
     </div>
 </template>
 
 <script>
     export default {
-
     }
 </script>
 

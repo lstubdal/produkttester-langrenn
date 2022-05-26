@@ -1,9 +1,9 @@
 <template>
     <div class="home" :style="{ backgroundImage: `url(${ backgroundImageUrl })` }">
         <section class="home__headline">
-            <h1 class="home__title">{{ title }}</h1>
+            <h1 class="home__headline-title">{{ title }}</h1>
             <hr class="home__headline-seperator">
-            <p>{{ undertitle}}</p>
+            <p class="home__headline-undertitle">{{ undertitle}}</p>
         </section>
 
         <section class="home__links">
@@ -13,7 +13,9 @@
 
             <RouterLink :to="{ name: 'waxTech'}" class="home__link">
                 <button class="home__newTest">
-                    <img src="/icons/add.svg" alt="add icon">
+                    <svg width="48" height="39" viewBox="0 0 48 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M25.5 18.2812V9.75H22.5V18.2812H12V20.7188H22.5V29.25H25.5V20.7188H36V18.2812H25.5Z" fill="white"/>
+                    </svg>
                     Opprett ny test
                 </button>
             </RouterLink>
@@ -73,8 +75,8 @@
 
 <style>
     .home {
-        width: 100%;
-        height: 100%;
+        width: 100vw;
+        height: 100vh;
         display: flex;
         flex-flow: column nowrap;
         justify-content: space-around;
@@ -89,12 +91,17 @@
         align-items: center;
     }
 
-    .home__title {
+    .home__headline-title {
         font-size: 3em;
     }
 
-    .home__title, .home__headline p {
+    .home__headline-title, .home__headline-headline p {
         color: var(--light);
+    }
+
+    .home__headline-undertitle {
+        color: var(--light);
+        font-size: 2em;
     }
 
     .home__headline-seperator {
@@ -137,5 +144,21 @@
 
     .home__newTest {
         background-color: var(--main-color);
+    }
+
+    @media screen and (max-width: 800px) {
+        .home__headline-title {
+            font-size: 2em;
+        }
+
+        .home__headline-undertitle {
+            font-size: 1.5em;
+        }
+
+        .home__newTest, .home__tests {
+            height: 75px;
+            width: 240px;
+            font-size: var(--button-text-mobile);
+        }
     }
 </style>
