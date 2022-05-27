@@ -48,12 +48,16 @@
                 const collectionId = 542909
                 const imageUrl = `https://api.unsplash.com/collections/${collectionId}/photos?client_id=${key}`;
 
-                const response = await fetch(imageUrl);
+                const response = await fetch(imageUrl, {
+                    headers: {
+                        Authorization: `Client-ID ${key}`
+                    } 
+                });
+                
                 const images = await response.json();
                 
                 this.backgroundImages = images;
                 this.backgroundImageUrl = this.backgroundImages[0].urls.regular // default background
-
             },
 
             delayBackgroundImage() {
