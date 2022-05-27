@@ -24,6 +24,17 @@
     import Banner from '../components/Banner.vue';
     
     export default {
+        created() {
+             const headTags = {
+                title: 'Tidligere tester',
+                description: 'Finn tidligere tester etter filter'
+            }
+
+            document.title = headTags.title;
+            document.querySelector('meta[name="description"]').setAttribute('content', headTags.description);
+			document.querySelector('meta[property="og:description"]').setAttribute('content', headTags.description);
+        },
+
         components: {
             Header,
             Banner

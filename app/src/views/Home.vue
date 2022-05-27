@@ -36,6 +36,15 @@
 
         async created() {
             this.fetchBackgroundImage();
+
+            const headTags = {
+                title: 'Produkttesteren',
+                description: 'Produkttester for langrennski'
+            }
+
+            document.title = headTags.title;
+            document.querySelector('meta[name="description"]').setAttribute('content', headTags.description);
+			document.querySelector('meta[property="og:description"]').setAttribute('content', headTags.description);
         },
 
         mounted() {
@@ -50,10 +59,9 @@
 
                 const response = await fetch(imageUrl, {
                     headers: {
-                        Authorization: `Client-ID ${key}`
+                        Authorization: `Client-ID ${key}` //authorize id to acces images when deployed
                     } 
                 });
-                
                 const images = await response.json();
                 
                 this.backgroundImages = images;
