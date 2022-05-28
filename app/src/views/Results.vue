@@ -1,20 +1,29 @@
 <template>
-  <div class="results">
-      <Banner :bannerTitle="'RESULTATER'" />
-      <div class="results__headline">
-          <span class="results__headline-text ">Par</span>
-          <span class="results__headline-text results__headline-text--large">Product</span>
-          <span class="results__headline-text ">Result</span>
-      </div>
+    <div v-if="!updated" class="results">
+        <Banner :bannerTitle="'RESULTATER'" />
+        <div class="results__headline">
+            <span class="results__headline-text ">Par</span>
+            <span class="results__headline-text results__headline-text--large">Product</span>
+            <span class="results__headline-text ">Result</span>
+        </div>
+        
+        <div class="results__result" v-for="(result, index) in results">
+            <span class="results__result-text">{{ result._key }}</span>
+            <span class="results__result-text results__result-text--large">{{ result.product }}</span>
+            <span class="results__result-text">{{ result.result }}</span>
+        </div>
 
-      <div class="results__result" v-for="(result, index) in results">
-          <span class="results__result-text">{{ result._key }}</span>
-          <span class="results__result-text results__result-text--large">{{ result.product }}</span>
-          <span class="results__result-text">{{ result.result }}</span>
-      </div>
+        <button class="pageButton pageButton--results" @click="updateResultsSanity">Lagre test</button>
+    </div>
 
-      <button class="pageButton pageButton--results" @click="updateResultsSanity">Lagre test</button>
-  </div>
+    <div v-if="updated" class="updated">
+        <p>{{ test.date }}</p>
+        <h3 class="updated-title">TEST LAGRET</h3>
+
+        <RouterLink :to="{name: 'home'}">
+            <button class="pageButton">&#8592; Til forsiden</button>
+        </RouterLink>
+    </div>
 </template>
 
 <script>
@@ -61,7 +70,7 @@
                 return this.results.sort((current, next) => compare(current, next) * asc)
             },
 
-            resultsArrayToSanity() {
+            formateToSanity() {
                 // remove 'current value' attribute in skipairs when updating to sanity
                 const resultsToSanity = []
                 this.results.forEach(pair => {
@@ -84,7 +93,7 @@
                     this.test.temperature,
                     this.test.snowdata,
                     this.test.numberOfPairs,
-                    this.resultsArrayToSanity(), 
+                    this.formateToSanity(), 
                     this.test.slug.current
                 );
             }
@@ -93,7 +102,7 @@
 </script>
 
 <style>
-    .results {
+    .results, .updated {
         height: 100vh;
         width: 100vw;
         display: flex;
@@ -137,6 +146,10 @@
         margin: 0.5% 0%;
         min-width: 80px;
         text-align: center;
+    }
+
+    .updated-title {
+        font-size: 2.8em;
     }
 
     .pageButton--results {
