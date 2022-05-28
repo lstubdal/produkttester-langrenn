@@ -58,43 +58,28 @@
         methods: {
             goToNextRound() {
                 if (this.validationPass()) {
-                    
-                    // update total result rembemebr
-                    //this.findWinners()
-                    //this.skipairs = this.nextRound; // for v-model
-                    console.log('skiapirs', this.skipairs); 
-                    /* this.emptyInputFields(); */
-                    
-                    
                     this.round += 1; // increase round nubmer for slug
-
-
-                    /* this.$router.push({ name: 'nextRound', params: {round: `runde-${this.round}`}}) */
                 }  
             },
 
             updateResultsStore() {
                 const results = []
-                this.skipairs.forEach((pairs, index) => {
-                    pairs.forEach((pair, indexPair) => {
-                        console.log('SE HER', this.skipairs[index][indexPair])
-                        this.skipairs[index][indexPair].result += this.skipairs[index][indexPair].currentResult
-                        console.log('SE HER etter', this.skipairs[index][indexPair].result)
 
-                        // 0 + 150
-                        // 150 + 150
-
-                        /* console.log('r', pair.result)
+                this.skipairs.forEach(skipairs => {
+                    skipairs.forEach(pair => {
+                        console.log('result før', pair.result)
+                        console.log('result current', pair.currentResult);
+                        /* let currentResult = pair.result += pair.currentResult; */
+                        console.log('current result variable');
                         pair.result += pair.currentResult;
-                        console.log('key', pair._key)
-                        console.log('total', pair.result += pair.currentResult);
-                        console.log('cr', pair.currentResult)*/
-                        results.push(pair) 
-                        /* delete pair.currentResult; */
                         
+                        console.log('result etter', pair.result);
 
+                        results.push(pair);
+                        
                     })
                 })
+                
                 console.log('RESULTS!!!!', results)
                 this.$store.dispatch('updateTotalResults', results);
             },

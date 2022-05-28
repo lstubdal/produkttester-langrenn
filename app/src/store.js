@@ -31,99 +31,63 @@ export default {
             state.rounds.push(nextRound);
         },
         
-        // dele opp i mindre funksjoner => if else round i actions?
         addTotalResults(state, currentResults) {
             if (firstRound()) { 
                 state.totalResults = currentResults;
 
             } else {
-                if (state.roundIndex === 1) {
-                    currentResults.forEach(pair => {    //iterate new round values
-                        if (pair.result > 0 && isEven(pair._key)) {
-                            state.totalResults[pair._key -2].result += pair.result; // add value to 'looserpair'
+                /* __MIDDLE ROUNDS__
+                The looserspair for the middlerounds needs to add their difference value to the looserpairs for the first round, 
+                to get correct total differencde from winnerskipair in the last round. 
+                
+                The skipairs are divided into testpairs of 2 skipairs.  That means that if the key of the looserpair is even, 
+                the looserpair from last round must be on the index below, and the opisite for odd key.
+                Then add looserpair value to last rounds looser on index+1 || index-1
+                */
+                if (state.roundIndex === 1) { // < 0 update
+                    currentResults.forEach(pair => {    
+                        if (pair.result > 0 && isEven(pair._key)) { 
+                            state.totalResults[pair._key -2].result += pair.result; 
                         } else {
                             if (pair.result > 0 && !isEven(pair._key)) {
                                 state.totalResults[pair._key].result += pair.result
                             }
                         } 
                     })
-                } else { // last round
+                } else { 
+                    /* __LAST ROUND__
+                        Add value from looserpair to other skipair, to calculate 
+                        the difference from the winnerpair (always value: 0) */
                     if (lastRound(currentResults)) {
                         currentResults.forEach(pair => {
-                            if (pair.result !== 0 ) {
-                                const winnerKey = parseInt(pair._key) 
-                                const [firstPair, secondPair] = currentResults  // access both pairs to compare key value
-                                const lowestKey = Math.min(firstPair._key, secondPair._key) 
-                                
-                                // add difference from winnerpair to skiapirs with key > winnerkey
-                                if (winnerKey !== lowestKey) {
-                                    console.log('RESULTSS', state.totalResults)
-                                    for (let index = winnerKey; index <= state.totalResults.length; index++) {
-                                        state.totalResults[index-1].result += pair.result
+                            if (pair.result !== 0 ) { 
+                                const looserKey = parseInt(pair._key) // find key for 'looser pair'
+                                const [firstPair, secondPair] = currentResults  
+                                const lowestKey = Math.min(firstPair._key, secondPair._key)  // find out if looserpair's key is > winnerpair's key
+
+                                // if key is larger than lowest key, add difference to skiapirs with larger key
+                                if (looserKey !== lowestKey) {
+                                    for (let index = looserKey; index <= state.totalResults.length; index++) {
+                                        state.totalResults[index].result += pair.result
                                     }
                                 } else {
-                                    // add difference from winnerpair to skiapirs with lowest key
-                                    const mark = state.totalResults.length / 2;
-                                    for (let index = mark; index < state.totalResults.length; index--) {
+                                    // Find midpoint of array and add difference from looserpair to skiapirs with lower keys
+                                    const midpoint = state.totalResults.length / 2; 
+                                    for (let index = midpoint; index < state.totalResults.length; index--) {
                                         console.log(pair.result);
                                         
-                                        if (index === 0) {
+                                        if (index === 1) {
                                             console.log('ferdig', state.totalResults)
                                             return
                                         }
                                         state.totalResults[index-1].result += pair.result
                                     }
-                                } 
-                         }  
+                                }  
+                         } 
                      })      
                     }
                  }
             }
-            
-            /* else {
-                if (state.roundIndex === 1) {
-                    currentResults.forEach(pair => {    //iterate new round values
-                        if (pair.result > 0 && isEven(pair._key)) {
-                            state.totalResults[pair._key -2].result += pair.result; // add value to 'looserpair'
-                        } else {
-                            if (pair.result > 0 && !isEven(pair._key)) {
-                                state.totalResults[pair._key].result += pair.result
-                            }
-                        } 
-                    })
-                }
-                
-                else { // last round
-                   if (lastRound(currentResults)) {
-                    currentResults.forEach(pair => {
-                        if (pair.result !== 0 ) {
-                            const winnerKey = parseInt(pair._key) 
-                            const [firstPair, secondPair] = currentResults  // access both pairs to compare key value
-                            const lowestKey = Math.min(firstPair._key, secondPair._key) 
-                            
-                            // add difference from winnerpair to skiapirs with key > winnerkey
-                            if (winnerKey !== lowestKey) {
-                                for (let index = winnerKey; index <= state.totalResults.length; index++) {
-                                    state.totalResults[index-1].result += pair.result
-                                }
-                            } else {
-                                // add difference from winnerpair to skiapirs with lowest key
-                                const mark = state.totalResults.length / 2;
-                                for (let index = mark; index < state.totalResults.length; index--) {
-                                    console.log(pair.result);
-                                    
-                                    if (index === 0) {
-                                        console.log('ferdig', state.totalResults)
-                                        return
-                                    }
-                                    state.totalResults[index-1].result += pair.result
-                                }
-                            } 
-                        }  
-                    })      
-                   }
-                }
-            } */
 
             function isEven(key) {
                 return key % 2 === 0;
