@@ -6,7 +6,7 @@ export default sanityClient({
     apiVersion: '2022-05-04',
     token: import.meta.env.VITE_SANITY,
     useCdn: false,
-    /* ignoreBrowserTokenWarning: true */
+    ignoreBrowserTokenWarning: true
 })
 
 
