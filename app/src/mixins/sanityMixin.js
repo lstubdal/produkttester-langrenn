@@ -5,13 +5,13 @@ export default {
         return {
             loading: true,
             updated: false,
-            test: null
+            tests: null
         }
     },
 
     methods: {
         async sanityFetchTest(query, params) {
-            this.test = await sanity.fetch(query, params);
+            this.tests = await sanity.fetch(query, params);
             this.loading = false;
         },
 
@@ -32,8 +32,7 @@ export default {
                 }
                 sanity.create(newTest)
                         .then((res => {
-                            console.log(`test was created, document ID is ${res._id}`)
-                            this.$router.push({ name: 'tester' })
+                            this.$router.push({ name: 'tester' }) // go to tester page AFTER test is created
                         }))
             } else {
                 const updateTest = {
@@ -50,6 +49,7 @@ export default {
                         current: slug
                     }
                 }
+                
                 sanity.createOrReplace(updateTest)
                         .then((res => {
                             this.updated = true;

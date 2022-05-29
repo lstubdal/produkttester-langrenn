@@ -13,7 +13,7 @@
             <hr class="allTests__divider">
             <h3 class="allTests__title">Alle tester</h3>
 
-            <ul v-for="test in test">
+            <ul v-for="test in tests">
                 <li class="allTests__names">
                     <RouterLink :to="{name: 'test', params: {testSlug: test.slug.current } }" class="allTests__link">
                         <span>{{ test.name }}</span>
@@ -43,7 +43,6 @@
         data() {
             return {
                 inputPlace: '',
-                placeNames: []
             }
         },
 
@@ -59,7 +58,7 @@
                 let testView = document.querySelectorAll('.allTests__names');
                 
                 // hide tests that don't contain any char from users input
-                for (let index = 0; index < this.test.length; index++) {
+                for (let index = 0; index < this.tests.length; index++) {
                     if (this.test[index].place.toLowerCase().indexOf(this.inputPlace.toLowerCase()) > -1) {
                         testView[index].style.display = '';
                     } else {
@@ -100,6 +99,7 @@
 
     .place__search input::placeholder {
         font-size: 1.2em;
+        opacity: 70%;
     }
 
     .allTests {
@@ -115,11 +115,13 @@
     }
 
     .allTests__title {
+        font-weight: 100;
         color: grey;
         padding-bottom: var(--padding-small);
     }
 
     .allTests__names {
+        font-weight: bold;
         font-size: 1.3em;
         padding: 6px 0px;
         list-style-type: none;

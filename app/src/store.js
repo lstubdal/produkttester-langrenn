@@ -130,7 +130,7 @@ export default {
     },
 
     actions: {
-        setTestId({state, commit}, id) {
+        setTestId({ commit}, id) {
             commit('addTestId', id);
         },
 

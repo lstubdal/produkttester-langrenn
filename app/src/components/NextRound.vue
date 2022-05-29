@@ -71,10 +71,10 @@
 
 <style>
     .nextRound {
+        height: 100vh;
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin: var(--margin-large) 0px;
     }
     
     .nextRound__skipairs {

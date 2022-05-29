@@ -170,7 +170,7 @@
             },
 
             createSlug() {
-                const slug = this.name.replace(' ', '-');
+                const slug = this.name.replaceAll(' ', '-');
                 return slug.toLowerCase();
             },
 
@@ -196,6 +196,8 @@
                     && this.validationTemperature() 
                     && this.validationSkiType()
                     && this.validationSkipairs()) {
+
+                        console.log(this.createSlug())
                         
                     /* create new testdocument to sanity */
                     this.createOrUpdateTest(

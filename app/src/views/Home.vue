@@ -36,19 +36,11 @@
 
         async created() {
             this.fetchBackgroundImage();
-
-            const headTags = {
-                title: 'Produkttesteren',
-                description: 'Produkttester for langrennski'
-            }
-
-            document.title = headTags.title;
-            document.querySelector('meta[name="description"]').setAttribute('content', headTags.description);
-			document.querySelector('meta[property="og:description"]').setAttribute('content', headTags.description);
+            document.title = 'Produkttesteren | Hjem';
         },
 
         mounted() {
-            /* this.delayBackgroundImage() */
+            /* this.displayNextBackgroundImage() */
         },
 
         methods: {
@@ -68,7 +60,7 @@
                 this.backgroundImageUrl = this.backgroundImages[0].urls.regular // default background
             },
 
-            delayBackgroundImage() {
+            displayNextBackgroundImage() {
                 let index = 1;
                 setInterval(() => {
                     this.backgroundImageUrl = this.backgroundImages[index].urls.regular

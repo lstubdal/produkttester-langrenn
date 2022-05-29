@@ -7,7 +7,7 @@
             <span class="results__headline-text ">Result</span>
         </div>
         
-        <div class="results__result" v-for="(result, index) in results">
+        <div class="results__result" v-for="result in results">
             <span class="results__result-text">{{ result._key }}</span>
             <span class="results__result-text results__result-text--large">{{ result.product }}</span>
             <span class="results__result-text">{{ result.result }}</span>
@@ -17,28 +17,43 @@
     </div>
 
     <div v-if="updated" class="updated">
-        <p>{{ test.date }}</p>
+        <p>{{ tests.date }}</p>
         <h3 class="updated-title">TEST LAGRET</h3>
 
         <RouterLink :to="{name: 'home'}">
-            <button class="pageButton">&#8592; Til forsiden</button>
+            <button @clicked="toggleClicked" class="pageButton">&#8592; Til forsiden</button>
         </RouterLink>
     </div>
 </template>
 
 <script>
     import Banner from '../components/Banner.vue';
-    import viewMixin from '../mixins/viewMixin';
+    import sanityMixin from '../mixins/sanityMixin';
     import query from '../groq/currentTest.groq?raw';
 
     export default {
-        mixins: [viewMixin],
+        mixins: [sanityMixin],
 
         async created() {
             if (this.results) {
                 this.sortResultsASC(); // winner skipair first
             } 
             await this.sanityFetchTest(query); // fetch current test
+        },
+
+        mounted() {
+            if (!this.clicked && this.updated) {
+                // Send user back to frontpage after 10 second if no interaction within this timespan
+                setTimeout(() => {
+                    this.$router.push({ name: 'home' })
+                }, 10000) 
+            }
+        },
+
+        data() {
+            return {
+                clicked: false
+            }
         },
 
         components: {
@@ -84,17 +99,21 @@
                 return resultsToSanity; // send results in sorted order
             },
 
+            toggleClicked() {
+                return this.clicked = true;
+            },
+
             updateResultsSanity() {
                 this.createOrUpdateTest(
                     this.testId,
-                    this.test.name,
-                    this.test.place,
-                    this.test.date,
-                    this.test.temperature,
-                    this.test.snowdata,
-                    this.test.numberOfPairs,
+                    this.tests.name,
+                    this.tests.place,
+                    this.tests.date,
+                    this.tests.temperature,
+                    this.tests.snowdata,
+                    this.tests.numberOfPairs,
                     this.formateToSanity(), 
-                    this.test.slug.current
+                    this.tests.slug.current
                 );
             }
         }

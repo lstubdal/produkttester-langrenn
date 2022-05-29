@@ -64,9 +64,9 @@
 
         computed: {
             testType(){
-                if (this.test.snowdata.classic === true) {
+                if (this.tests.snowdata.classic === true) {
                     return 'Klassisk'
-                } else if (this.test.snowdata.skating === true) {
+                } else if (this.tests.snowdata.skating === true) {
                     return 'Skøyting'
                 } else {
                    return 'Skibytte'

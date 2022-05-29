@@ -2,19 +2,19 @@
   <LoadingScreen v-if="loading" />
   <div v-else class="tester">
     <Header  :page="'tester'" />
-    <Information :test="test" :page="'tester'" />
+    <Information :test="tests" :page="'tester'" />
     <RouterView /> <!-- to render child views of tester -->
 
       <!-- tester input -->
      <section v-if="$route.name === 'tester'" class="tester__skipairs">
         <Banner :bannerTitle="'TEST 1'" />
 
-        <div class="tester__skipairs-pairs" v-for="(pairs, indexResults) in splittedSkipairs">
+        <div class="tester__skipairs-pairs" v-for="(pairs, indexResults) in skipairs">
           <SkipairsHeadline  />
           <div v-for="(pair, index) in pairs">
             <div class="pair">
               <label class="pair__number" for="product">{{ pair._key }}</label>
-              <input class="pair__product pair__product--tester" type="number" name="product" placeholder="Skriv inn resultat" v-model="splittedSkipairs[indexResults][index].currentResult"> 
+              <input class="pair__product pair__product--tester" type="number" name="product" placeholder="Skriv inn resultat" v-model="skipairs[indexResults][index].currentResult"> 
             </div>
           </div> 
         </div>
@@ -42,13 +42,13 @@
 
       async created() {
        await this.sanityFetchTest(query); // fetch current test
-       this.$store.dispatch('setTestId', this.test._id)
-       this.splittedSkipairs = this.splitIntoPairs(this.test.addedSkipairs);
+       this.$store.dispatch('setTestId', this.tests._id)
+       this.skipairs = this.splitIntoPairs(this.tests.addedSkipairs);
       },
 
       data() {
         return {
-          splittedSkipairs: [],
+          skipairs: [],
           round: 0,
         }
       },
@@ -64,12 +64,12 @@
 
       methods: {
         nextRound() {
-          if (this.validationPass(this.splittedSkipairs, 'errorTestInput')) {
-            if (this.test.addedSkipairs.length <= 2) {
-                this.updateResultsStore(this.splittedSkipairs);
+          if (this.validationPass(this.skipairs, 'errorTestInput')) {
+            if (this.tests.addedSkipairs.length <= 2) {
+                this.updateResultsStore(this.skipairs);
                 this.$router.push({ name: 'results', params: 'results' }) // if only 2 skipairs tested
             } else {
-                this.findWinners(this.splittedSkipairs);
+                this.findWinners(this.skipairs);
                 this.$store.dispatch('increaseRoundIndex')
                 this.$router.push({ name: 'nextRound', params: {round: 'runde-2'} })
             }
@@ -86,7 +86,6 @@
     font-family: var(--main-font);
     color: var(--main-color);
     background-image: url(/images/background.png);
-    padding-bottom: var(--padding-large);
   }
 
   .tester__header {

@@ -71,9 +71,10 @@
     }
 
     .hamburger__menu-text {
+        font-size: 1.4em;
         text-decoration: none;
         color: var(--main-color);
-        padding: var(--padding-small);
+        padding: var(--padding-medium);
     }
 
     .hamburger__menu-text--tests {
