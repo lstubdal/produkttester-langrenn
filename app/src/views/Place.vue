@@ -2,16 +2,26 @@
     <loadingScreen v-if="loading" />
     <div v-else class="place">
         <Header :page="'previousTest'" />
+        <Banner :bannerPage="'previousTest'" :bannerTitle="'Sted'" class="banner--previousTests" />
         
-        <div class="place__content">
-            <Banner :bannerPage="'previousTest'" :bannerTitle="'Sted'" class="banner--previousTests" />
+        <section class="place__search">
+            <label for="placeInput">Søk på sted for å finne test</label>
+            <input type="text" name="placeInput" v-model="inputPlace" placeholder="Skriv her..." @keyup="filterTests">
+        </section>
 
-            <p class="place__undertitle">Viser i alfabetisk rekkefølge</p>
+        <section class="allTests">
+            <hr class="allTests__divider">
+            <h3 class="allTests__title">Alle tester</h3>
 
-            <div class="place__test" v-for="t in test">
-                <RouterLink :to="{name: 'test', params: { testSlug: t.slug.current } }" class="tests__test-name">{{ t.name }}</RouterLink>
-            </div>
-        </div>
+            <ul v-for="test in test">
+                <li class="allTests__names">
+                    <RouterLink :to="{name: 'test', params: {testSlug: test.slug.current } }" class="allTests__link">
+                        <span>{{ test.name }}</span>
+                        <span class="allTests__link-place">Sted: {{ test.place }}</span>
+                    </RouterLink>
+                </li>
+            </ul>
+        </section>
     </div>
 </template>
 
@@ -19,11 +29,23 @@
     import Header from '../components/Header.vue';
     import Banner from '../components/Banner.vue';
     import LoadingScreen from '../components/LoadingScreen.vue';
-    import viewMixin from '../mixins/viewMixin';
-    import nameQuery from '../groq/nameTests.groq?raw';
+    import sanityMixin from '../mixins/sanityMixin.js';
+    import testMixin from '../mixins/testMixin.js'; 
+    import allTests from '../groq/allTests.groq?raw'; // ?raw -> read file as it is
 
     export default {
-        mixins: [viewMixin],
+        mixins: [sanityMixin, testMixin],
+
+        async created() {
+            await this.sanityFetchTest(allTests);
+        },
+
+        data() {
+            return {
+                inputPlace: '',
+                placeNames: []
+            }
+        },
 
         components: {
             Header,
@@ -31,39 +53,98 @@
             LoadingScreen
         },
 
-        async created() {
-            await this.sanityFetchTest(nameQuery)
-     
+        methods: {
+            filterTests() {
+                console.log('check')
+                let testView = document.querySelectorAll('.allTests__names');
+                
+                // hide tests that don't contain any char from users input
+                for (let index = 0; index < this.test.length; index++) {
+                    if (this.test[index].place.toLowerCase().indexOf(this.inputPlace.toLowerCase()) > -1) {
+                        testView[index].style.display = '';
+                    } else {
+                        testView[index].style.display = 'none';
+                    }
+                }
+            }
         }
-
     }
 </script>
 
 <style>
-    .place, .place__content {
+    .place {
         display: flex;
         flex-direction: column;
         align-items: center;
         font-family: var(--main-font);
-        font-size: 1.3em;
     }
 
-    .place__undertitle {
-        color: rgb(119, 117, 117);
-        font-size: 1em;
-    }
-
-    .place__test {
+    .place__search {
         display: flex;
-        justify-content: center;
-        border-bottom: 1px solid var(--second-color);
-        padding: 0.5%;
-        margin: var(--margin-large) var(--margin-small);
+        flex-direction: column;
+        align-items: center;
     }
 
-    .tests__test-name {
+    .place__search label {
+        font-size: 1.2em;
+        color: var(--second-color);
+        opacity: 80%;
+        padding-bottom: var(--padding-medium);
+    }
+
+    .place__search input {
+        height: 40px;
+        width: 300px;
+        padding: var(--padding-small);
+    }
+
+    .place__search input::placeholder {
+        font-size: 1.2em;
+    }
+
+    .allTests {
+        width: 25%;
+    }
+
+    .allTests__divider {
+        height: 0.2px;
+        background-color: rgb(107, 106, 106);
+        width: 100%;
+        opacity: 30%;
+        margin: var(--margin-medium) 0px;
+    }
+
+    .allTests__title {
+        color: grey;
+        padding-bottom: var(--padding-small);
+    }
+
+    .allTests__names {
         font-size: 1.3em;
+        padding: 6px 0px;
+        list-style-type: none;
+    }
+
+    .allTests__link {
+        display: flex;
+        flex-direction: column;
         text-decoration: none;
         color: var(--second-color);
     }
+
+    .allTests__link-place {
+        font-size: 0.8em;
+        color: rgb(175, 174, 174);
+    }
+
+   .errorInputPlace {
+       display: none;
+       font-size: 1.5em;
+   }
+
+   @media screen and (max-width: 700px){
+       .allTests {
+            width: 50%;
+        }  
+   }
 </style>

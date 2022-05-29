@@ -1,7 +1,7 @@
 *[_type == 'test'] | order(name asc ){
     name,
+    place,
     slug {
         current
-    }
-   
+    }  
 }
