@@ -26,7 +26,7 @@
     export default {
         created() {
              const headTags = {
-                title: 'Tidligere tester',
+                title: 'Produkttesteren | Finn test',
                 description: 'Finn tidligere tester etter filter'
             }
 

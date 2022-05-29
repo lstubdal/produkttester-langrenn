@@ -3,7 +3,6 @@
   <div v-else class="tester">
     <Header  :page="'tester'" />
     <Information :test="test" :page="'tester'" />
-    
     <RouterView /> <!-- to render child views of tester -->
 
       <!-- tester input -->
@@ -19,6 +18,7 @@
             </div>
           </div> 
         </div>
+        
         <div class="inputError errorTestInput"></div>
         <button @click="nextRound" class="pageButton">NEXT</button>
     </section>
@@ -28,15 +28,17 @@
 <script>
     import Header from '../components/Header.vue';
     import LoadingScreen from '../components/LoadingScreen.vue';
-    import viewMixin from '../mixins/viewMixin';
-    import query from '../groq/currentTest.groq?raw';
     import NextRound from '../components/NextRound.vue';
     import Banner from '../components/Banner.vue';
     import Information from '../components/Information.vue';
     import SkipairsHeadline from '../components/SkipairsHeadline.vue';
 
+    import sanityMixin from '../mixins/sanityMixin.js';
+    import testMixin from '../mixins/testMixin.js';
+    import query from '../groq/currentTest.groq?raw';
+
     export default {
-      mixins: [viewMixin],
+      mixins: [sanityMixin, testMixin],
 
       async created() {
        await this.sanityFetchTest(query); // fetch current test
@@ -61,69 +63,15 @@
       },
 
       methods: {
-        splitIntoPairs(tempArray) {
-          const splittedIntoPairs = []
-          if (tempArray) { // Add: if tempArray.length >= 2 check
-            for (let index = 0; index < tempArray.length; index += 2) {
-            splittedIntoPairs.push([tempArray[index], tempArray[index +1]])
-            }
-            return splittedIntoPairs;
-          }
-        },
-
-        validationPass() {
-          const inputField = document.querySelector('.errorTestInput')
-          this.splittedSkipairs.forEach(pairs => {
-            pairs.forEach(pair => {
-              if (!pair.currentResult) {
-                inputField.innerText = 'Obs, fyll inn alle feltene';
-                inputField.style.display = 'block';
-                return false
-              } 
-            })
-          })
-          inputField.style.display = 'none';
-          return true
-          
-        },
-
-        updateResultsStore() {
-          const results = []
-          this.splittedSkipairs.forEach(pairs => {
-              pairs.forEach(pair => {
-                pair.result = pair.currentResult // update current result to total result
-                delete pair.currentResult // remove currentValue attr. for next round (clear inputfields)
-                results.push(pair)
-              })
-            })
-
-            this.$store.dispatch('updateTotalResults', results);
-        },
-      
-
-        findWinners() {        
-          const currentWinners = []
-            this.splittedSkipairs.forEach(pairs => {
-              const [first, second] = pairs // crate pair variable
-              const winnerValue = Math.min(first.currentResult, second.currentResult); // compare first and second to fnd lowest value aka winner
-              const currentWinner = pairs.find(skipair => skipair.currentResult === winnerValue);
-
-              currentWinners.push(currentWinner)  // add currentWinner to array
-            })
-            
-            this.updateResultsStore();
-            this.$store.dispatch('updateNextRound', this.splitIntoPairs(currentWinners)); // save winners from current round in store to access to next round, and split into pairs
-        },
-
         nextRound() {
-          if (this.validationPass()) {
+          if (this.validationPass(this.splittedSkipairs, 'errorTestInput')) {
             if (this.test.addedSkipairs.length <= 2) {
-
-              this.$router.push({ name: 'results', params: 'results' }) // if only 2 skipairs tested
+                this.updateResultsStore(this.splittedSkipairs);
+                this.$router.push({ name: 'results', params: 'results' }) // if only 2 skipairs tested
             } else {
-              this.findWinners();
-              this.$store.dispatch('increaseRoundIndex')
-              this.$router.push({ name: 'nextRound', params: {round: 'runde-2'} })
+                this.findWinners(this.splittedSkipairs);
+                this.$store.dispatch('increaseRoundIndex')
+                this.$router.push({ name: 'nextRound', params: {round: 'runde-2'} })
             }
           }
         } 

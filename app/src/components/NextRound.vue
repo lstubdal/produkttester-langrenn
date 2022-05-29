@@ -11,7 +11,7 @@
             </div>
         </div>
 
-        <div class="errorTestInput-nextRound"></div>
+        <div class="inputError errorTestInput-nextRound"></div>
         <RouterLink :to="{ name: 'nextRound', params: {round: `runde-${round}` } } ">
             <button @click="goToNextRound" class="pageButton">NEXT</button>
         </RouterLink>
@@ -21,11 +21,13 @@
 <script>
     import Banner from '../components/Banner.vue';
     import SkipairsHeadline from '../components/SkipairsHeadline.vue';
+    import testMixin from '../mixins/testMixin.js';
 
     export default {
+        mixins: [testMixin],
+
         created() {
             this.skipairs = this.nextRound; // for v-model
-            console.log('skiapirs', this.skipairs);
         },
 
         data(){
@@ -36,11 +38,9 @@
         },
 
         beforeRouteUpdate(to, from, next) {
-            this.findWinners()
-            this.updateResultsStore(); 
+            this.findWinners(this.skipairs);
             this.$store.dispatch('increaseRoundIndex');
-            this.skipairs = this.nextRound;
-             
+            this.skipairs = this.nextRound; // udpate testingpairs view
             next();
         },
 
@@ -57,80 +57,11 @@
 
         methods: {
             goToNextRound() {
-                if (this.validationPass()) {
+                if (this.validationPass(this.skipairs, 'errorTestInput-nextRound')) {
                     this.round += 1; // increase round nubmer for slug
                 }  
             },
-
-            updateResultsStore() {
-                const results = []
-
-                this.skipairs.forEach(skipairs => {
-                    skipairs.forEach(pair => {
-                        console.log('result før', pair.result)
-                        console.log('result current', pair.currentResult);
-                        /* let currentResult = pair.result += pair.currentResult; */
-                        console.log('current result variable');
-                        pair.result += pair.currentResult;
-                        
-                        console.log('result etter', pair.result);
-
-                        results.push(pair);
-                        
-                    })
-                })
-                
-                console.log('RESULTS!!!!', results)
-                this.$store.dispatch('updateTotalResults', results);
-            },
-
-            findWinners() {
-                const winners = []
-                if (this.skipairs.length === 1 ) {
-                    this.$router.push({ name: 'results', params: 'results' }) // move to results view after the last test
-                    
-                } else {
-                    this.skipairs.forEach(pairs => {
-                        const [first, second] = pairs
-                        const winnerValue = Math.min(first.currentResult, second.currentResult);
-                        const currentWinner = pairs.find(pair => pair.currentResult === winnerValue);
-                        
-                        winners.push(currentWinner)
-                    })
-                    this.$store.dispatch('updateNextRound', this.splitIntoPairs(winners)) 
-                }  
-            },
-
-            splitIntoPairs(skipairArray) {
-                let splittetPairs = []
-                if (skipairArray.length < 2) {
-                    splittetPairs = skipairArray
-                } else {
-                    if (skipairArray.length >= 2) {
-                    for (let index = 0; index <  skipairArray.length; index+=2) {
-                        splittetPairs.push([skipairArray[index], skipairArray[index+1]])
-                    }
-                }
-
-                return splittetPairs
-                }      
-            },
             
-            // move function to store?
-            validationPass() {
-                const inputField = document.querySelector('.errorTestInput-nextRound');
-                this.skipairs.forEach(pairs => {
-                    pairs.forEach(pair => {
-                        if (!pair.currentResult) {
-                            inputField.innerText = 'Obs, fyll inn alle feltene';
-                            inputField.style.display = 'block';
-                        }
-                    })
-                })
-                inputField.style.display = 'none';
-                return true
-            },
-
             skipairKey(pair) {
                 return Object.values(pair)[0]
             }

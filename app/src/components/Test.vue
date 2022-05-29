@@ -41,11 +41,11 @@
     import Header from '../components/Header.vue';
     import Information from '../components/Information.vue';
     import Banner from '../components/Banner.vue';
-    import viewMixin from '../mixins/viewMixin';
+    import sanityMixin from '../mixins/sanityMixin';
     import query from '../groq/previousTest.groq?raw';
 
     export default {
-        mixins: [viewMixin],
+        mixins: [sanityMixin],
 
         async created() {
             console.log(this.$route.params.testSlug);

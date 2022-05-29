@@ -90,10 +90,11 @@
 
 <script>
     import Header from '../components/Header.vue';
-    import viewMixin from '../mixins/viewMixin.js'
+    import sanityMixin from '../mixins/sanityMixin.js';
+    import testMixin from '../mixins/testMixin.js';
 
     export default {
-        mixins: [viewMixin],
+        mixins: [sanityMixin, testMixin],
 
         data() {
             return {
@@ -177,42 +178,8 @@
                 return parseInt(this.numberOfpairs)
             },
 
-            validationName(inputField) {
-                inputField = document.querySelector('.errorName');
-                if (this.name === '') {
-                    inputField.innerText = 'Mangler navn!';
-                    inputField.style.display = 'block';
-                } else {
-                    inputField.style.display = 'none';
-                    return true
-                }
-            },
-
-            validationPlace(inputField) {
-                inputField = document.querySelector('.errorPlace');
-                if (this.place === '') {
-                    inputField.innerText = 'Mangler sted!'
-                    inputField.style.display = 'block'
-                    return false
-                    
-                }
-                inputField.style.display = 'none';
-                return true
-            },
-
-            validationDate(inputField) {
-                inputField = document.querySelector('.errorDate');
-                if (this.date === '') {
-                    inputField.innerText = 'Mangler dato!';
-                    inputField.style.display = 'block';
-                    return false
-                }
-                inputField.style.display = 'none'; 
-                return true
-            },
-
-            validationTemperature(inputField) {
-                inputField = document.querySelector('.errorTemperature');
+            validationTemperature() {
+                const inputField = document.querySelector('.errorTemperature');
                 if (this.temperature === null) {
                     inputField.innerText = 'Mangler temperatur!';
                     inputField.style.display = 'block';
@@ -222,8 +189,36 @@
                 return true
             },
 
-            validationSkiType(inputField) {
-                inputField = document.querySelector('.errorTestType');
+            createTestSanity() {
+                if (this.validationTextInput(this.name, 'errorName', 'Mangler navn!' ) 
+                    && this.validationTextInput(this.place, 'errorPlace', 'Mangler sted!') 
+                    && this.validationTextInput(this.date, 'errorDate', 'Mangler dato!') 
+                    && this.validationTemperature() 
+                    && this.validationSkiType()
+                    && this.validationSkipairs()) {
+                        
+                    /* create new testdocument to sanity */
+                    this.createOrUpdateTest(
+                        this.testId,
+                        this.name, 
+                        this.place, 
+                        this.date,
+                        this.temperature,
+                        this.createSnowDataObject(),
+                        this.numberOfpairs,
+                        this.createSkipairObjects(),
+                        this.createSlug()
+                    );
+                 
+                } else {
+                    const inputField = document.querySelector('.errorPage');
+                    inputField.innerText = 'Alle felt er ikke fylt inn';
+                    inputField.style.display = 'block';
+                }  
+            },
+
+            validationSkiType() {
+                const inputField = document.querySelector('.errorTestType');
                 if (this.selectedTestType === '') {
                     inputField.innerText = 'Mangler testtype'
                     inputField.style.display = 'block'
@@ -249,43 +244,21 @@
                 return true 
             },
 
-            validationSkipairs(inputField) {
-                inputField = document.querySelector('.errorNumberOfSkipairs');
-                inputField = document.querySelector('.errorProduct');
+            validationSkipairs() {
+                const inputFieldNumber = document.querySelector('.errorNumberOfSkipairs');
+                const inputFieldProduct = document.querySelector('.errorProduct');
                 if (this.numberOfpairs === null) {
-                    inputField.innerText = 'Mangler antall skipar som skal testes';
-                    inputField.style.display = 'block';
+                    inputFieldNumber.innerText = 'Mangler antall skipar som skal testes';
+                    inputFieldNumber.style.display = 'block';
                     return false
                 } else if (this.numberOfpairs !== null && this.products.length === 0) {
-                    inputField.innerText = 'Mangler et produkt på skipar';
-                    inputField.style.display = 'block';
+                    inputFieldProduct.innerText = 'Mangler et produkt på skipar';
+                    inputFieldProduct.style.display = 'block';
                     return false
                 }
-                inputField.style.display = 'none';
+                inputFieldNumber.style.display = 'none';
+                inputFieldProduct.style.display = 'none';
                 return true
-            },
-
-            createTestSanity() {
-                let inputField = null
-                if (this.validationName(inputField) && this.validationName(inputField) && this.validationPlace(inputField) && this.validationDate(inputField) && this.validationTemperature(inputField) && this.validationSkiType(inputField)) {
-                    /* create new testdocument to sanity */
-                    this.createOrUpdateTest(
-                        this.testId,
-                        this.name, 
-                        this.place, 
-                        this.date,
-                        this.temperature,
-                        this.createSnowDataObject(),
-                        this.numberOfpairs,
-                        this.createSkipairObjects(),
-                        this.createSlug()
-                    );
-                 
-                } else {
-                    inputField = document.querySelector('.errorPage');
-                    inputField.innerText = 'Alle felt er ikke fylt inn';
-                    inputField.style.display = 'block';
-                }  
             }
         }
     }
