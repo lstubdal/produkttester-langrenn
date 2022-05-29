@@ -52,13 +52,7 @@ export default {
                 }
                 sanity.createOrReplace(updateTest)
                         .then((res => {
-                            console.log(`test updated ${res._id}`)
                             this.updated = true;
-
-                            // Send user back to frontpage after 10 second if no interaction within this timespan
-                            setTimeout(() => {
-                                this.$router.push({ name: 'home' })
-                            }, 10000) 
                         }))
 
             }
