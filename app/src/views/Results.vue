@@ -20,9 +20,7 @@
         <p>{{ tests.date }}</p>
         <h3 class="updated-title">TEST LAGRET</h3>
 
-        <RouterLink :to="{name: 'home'}">
-            <button @clicked="backToHomepage" class="pageButton">&#8592; Til forsiden</button>
-        </RouterLink>
+        <RouterLink :to="{name: 'home'}" @clicked="backToHomepage" class="pageLink">&#8592; Til forsiden</RouterLink>
     </div>
 </template>
 
@@ -42,18 +40,19 @@
         },
 
         watch: {
-            goBackClicked() {
-                // Send user back to frontpage if no interaction within this timespan
-                if (!this.goBackClicked) {
+            updated() {
+                // Send user back to frontpage if no interaction within timespan
+                if (!this.goBackClicked && this.updated) {
                     setTimeout(() => {
                         this.$router.push({ name: 'home' })
-                    }, 10000) 
+                    }, 5000) 
                 } else {
-                    if (this.goBackClicked) {
-                        return
+                    if (this.goBackClicked && this.updated) {
+                        return 
                     }
                 }
-            }
+             }
+        
         },
 
         data() {
@@ -79,6 +78,10 @@
             backToHomepage() {
                 return this.goBackClicked = true;
             },
+
+            currentRouterName() {
+                return this.$route.name;
+            }
         },
 
         methods: {
