@@ -41,7 +41,20 @@
             await this.sanityFetchTest(query); // fetch current test information
         },
 
-       
+        watch: {
+            goBackClicked() {
+                // Send user back to frontpage if no interaction within this timespan
+                if (!this.goBackClicked) {
+                    setTimeout(() => {
+                        this.$router.push({ name: 'home' })
+                    }, 10000) 
+                } else {
+                    if (this.goBackClicked) {
+                        return
+                    }
+                }
+            }
+        },
 
         data() {
             return {
