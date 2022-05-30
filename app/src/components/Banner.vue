@@ -63,6 +63,10 @@
         background-color: var(--second-color) ;
     }
 
+    .banner--previousTests {
+        margin: var(--margin-large)
+    }
+
     @media screen and (max-width: 800px) {
         .banner__title {
             width: 100%;

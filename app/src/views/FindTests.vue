@@ -4,9 +4,9 @@
         <Banner :bannerPage="'findTest'" :bannerTitle="'Finn tester'" />
         
         <div class="findTests__links">
-            <RouterLink :to="{ name : 'place' }" class="findTest__link">Sted</RouterLink>
-            <RouterLink :to="{ name : 'temperature' }" class="findTest__link" >Temperatur</RouterLink>
-            <RouterLink :to="{ name : 'date' }" class="findTest__link">Dato</RouterLink>
+            <RouterLink :to="{ name : 'place' }" class="pageLink">Sted</RouterLink>
+            <RouterLink :to="{ name : 'temperature' }" class="pageLink" >Temperatur</RouterLink>
+            <RouterLink :to="{ name : 'date' }" class="pageLink">Dato</RouterLink>
         </div>
     </div>
 </template>
@@ -49,21 +49,6 @@
         display: flex;
         justify-content: center;
         align-items: center;
-    }
-
-    .findTest__link {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 180px;
-        height: 50px;
-        color: var(--light);
-        font-family: var(--main-font);
-        font-size: 1.2em;
-        text-decoration: none;
-        background-color: var(--second-color);
-        margin: var(--margin-large) var(--margin-small);
-        border-radius: var(--button-corners);
     }
 
     @media screen and (max-width: 800px) {

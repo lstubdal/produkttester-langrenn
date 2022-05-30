@@ -59,7 +59,7 @@
                 
                 // hide tests that don't contain any char from users input
                 for (let index = 0; index < this.tests.length; index++) {
-                    if (this.test[index].place.toLowerCase().indexOf(this.inputPlace.toLowerCase()) > -1) {
+                    if (this.tests[index].place.toLowerCase().indexOf(this.inputPlace.toLowerCase()) > -1) {
                         testView[index].style.display = '';
                     } else {
                         testView[index].style.display = 'none';

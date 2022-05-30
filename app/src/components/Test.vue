@@ -2,8 +2,8 @@
     <LoadingScreen v-if="loading" />
     <div v-else class="test">
         <Header :page="'previousTest'" />
-        <Information :test="test" :page="'previousTest'" class="test__information" />
-        <Banner :bannerPage="'previousTest'" :bannerTitle="test.name" />
+        <Information :test="tests" :page="'previousTest'" class="test__information" />
+        <Banner :bannerPage="'previousTest'" :bannerTitle="tests.name" />
 
         <section class="test__snowdata">
             <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -13,8 +13,8 @@
             <h3>Snødata</h3>
             <div class="test__snowdata-type">-{{ testType }}-</div>
             <div class="test__snowdata-data">
-                <div v-if="testType === 'Klassisk' || testType === 'Skibytte'">I spor: {{ test.snowdata.inTrack }}</div>
-                <div v-if="testType === 'Skøyting' || testType === 'Skibytte'">Utenfor spor: {{ test.snowdata.outsideTrack }}</div>
+                <div v-if="testType === 'Klassisk' || testType === 'Skibytte'">I spor: {{ tests.snowdata.inTrack }}</div>
+                <div v-if="testType === 'Skøyting' || testType === 'Skibytte'">Utenfor spor: {{ tests.snowdata.outsideTrack }}</div>
             </div>
         </section>
 
@@ -25,7 +25,7 @@
                 <span>Diff</span>
             </div>
 
-            <div class="test__results-skipairs" v-for="pair in test.addedSkipairs">
+            <div class="test__results-skipairs" v-for="pair in tests.addedSkipairs">
                 <div class="test__results-skipair">
                     <div>{{ pair._key }}</div>
                     <span>{{ pair.product }}</span>
