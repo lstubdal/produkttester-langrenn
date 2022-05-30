@@ -3,17 +3,17 @@ import FindTests from './views/FindTests.vue';
 import WaxTech from './views/WaxTech.vue';
 import Tester from './views/Tester.vue';
 import Test from './components/Test.vue';
-
 import Place from './views/Place.vue';
 import Temperature from './views/Temperature.vue';
 import Date from './views/Date.vue';
-
 
 /* children*/
 import NextRound from './components/NextRound.vue';
 import Results from './views/Results.vue';
 
-/* OBS FIKS ENGELSK OG NORSK KOMBINARSJON */
+/* Handle if dynamic routes fail, or user types in wrong page/typos */
+import PageNotFound from './views/PageNotFound.vue';
+
 export default [
 	{ 
 		name: 'home', 		
@@ -22,7 +22,7 @@ export default [
 	},
 	{
 		name: 'findTests',
-		path: '/finn-test',
+		path: '/finn-test', // norwegian path names for user
 		component: FindTests
 	},
 	{
@@ -66,8 +66,11 @@ export default [
 		name: 'test',
 		path: '/finn-test/:testSlug',
 		component: Test
-	}
-		
-	
+	},
+	{
+		name: 'pageNotFound',
+		path: '/:catchAll(.*)', // routenames that don't match existing will be redirected to this view
+		component: PageNotFound
+	}	
 ];
 
