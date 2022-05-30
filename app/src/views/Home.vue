@@ -1,5 +1,7 @@
 <template>
-    <div class="home" :style="{ backgroundImage: `url(${ backgroundImageUrl })` }">
+    <div v-if="error">Ups, noe gikk galt! {{ error }}</div>
+
+    <div v-if="!error" class="home" :style="{ backgroundImage: `url(${ backgroundImageUrl })` }">
         <section class="home__headline">
             <h1 class="home__headline-title">{{ title }}</h1>
             <hr class="home__headline-seperator">
@@ -30,7 +32,8 @@
                 title: 'PRODUKTTESTEREN',
                 undertitle: 'Langrenn',
                 backgroundImageUrl: '',
-                backgroundImages: []
+                backgroundImages: [],
+                error: ''
             }
         },
 
@@ -54,10 +57,33 @@
                         Authorization: `Client-ID ${key}` //authorize id to acces images when deployed
                     } 
                 });
-                const images = await response.json();
-                
-                this.backgroundImages = images;
-                this.backgroundImageUrl = this.backgroundImages[0].urls.regular // default background
+
+                try {
+                    await this.handleFetchResponse(response);
+                } catch(error) {
+                    this.error = error.message
+                }
+            },
+
+            async handleFetchResponse(response) {
+                if ( response.status >= 200 && response.status < 300) {
+                    const images = await response.json();
+
+                    this.backgroundImages = images;
+                    this.backgroundImageUrl = this.backgroundImages[0].urls.regular // default background
+
+                } else {
+                    if(response.status === 404) {
+                        throw new Error('Url not found');
+                    }
+                    if(response.status === 401) {
+                        throw new Error('Unsplash key not authorized');
+                    }
+                    if(response.status > 500) {
+                        throw new Error('Server error!');
+                    }
+                    throw new Error('Something went wrong');
+                }
             },
 
             displayNextBackgroundImage() {
