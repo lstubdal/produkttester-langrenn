@@ -6,11 +6,11 @@
             <span class="results__headline-text results__headline-text--large">Product</span>
             <span class="results__headline-text ">Result</span>
         </div>
-        
-        <div class="results__result" v-for="result in results">
-            <span class="results__result-text">{{ result._key }}</span>
-            <span class="results__result-text results__result-text--large">{{ result.product }}</span>
-            <span class="results__result-text">{{ result.result }}</span>
+
+        <div class="results_result" v-for="pair in results">
+            <span :class="`results__result-text ${pair.result === 0 ? 'results__result-text--winner' : ''}`">{{ pair._key }}</span>
+            <span class="results__result-text--large" :class="`results__result-text ${pair.result === 0 ? 'results__result-text--winner' : ''}`">{{ pair.product }}</span>
+            <span :class="`results__result-text ${pair.result === 0 ? 'results__result-text--winner' : ''}`">{{ pair.result }}</span>
         </div>
 
         <button class="pageButton pageButton--results" @click="updateResultsSanity">Lagre test</button>
@@ -21,7 +21,7 @@
         <h3 class="updated-title">TEST LAGRET</h3>
 
         <RouterLink :to="{name: 'home'}">
-            <button @clicked="toggleClicked" class="pageButton">&#8592; Til forsiden</button>
+            <button @clicked="backToHomepage" class="pageButton">&#8592; Til forsiden</button>
         </RouterLink>
     </div>
 </template>
@@ -38,21 +38,15 @@
             if (this.results) {
                 this.sortResultsASC(); // winner skipair first
             } 
-            await this.sanityFetchTest(query); // fetch current test
+            await this.sanityFetchTest(query); // fetch current test information
         },
 
-        mounted() {
-            if (!this.clicked && this.updated) {
-                // Send user back to frontpage after 10 second if no interaction within this timespan
-                setTimeout(() => {
-                    this.$router.push({ name: 'home' })
-                }, 10000) 
-            }
-        },
+       
 
         data() {
             return {
-                clicked: false
+                updated: false,
+                goBackClicked: false,
             }
         },
 
@@ -67,7 +61,11 @@
 
             testId() {
                 return this.$store.getters.getTestId;
-            }
+            },
+
+            backToHomepage() {
+                return this.goBackClicked = true;
+            },
         },
 
         methods: {
@@ -99,10 +97,6 @@
                 return resultsToSanity; // send results in sorted order
             },
 
-            toggleClicked() {
-                return this.clicked = true;
-            },
-
             updateResultsSanity() {
                 this.createOrUpdateTest(
                     this.testId,
@@ -115,6 +109,8 @@
                     this.formateToSanity(), 
                     this.tests.slug.current
                 );
+
+                this.updated = true;
             }
         }
     }
@@ -165,6 +161,10 @@
         margin: 0.5% 0%;
         min-width: 80px;
         text-align: center;
+    }
+
+    .results__result-text--winner {
+        color: var(--highlight);
     }
 
     .updated-title {
