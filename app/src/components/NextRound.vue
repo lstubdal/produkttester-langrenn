@@ -13,7 +13,7 @@
 
         <div class="inputError errorTestInput-nextRound"></div>
         <RouterLink :to="{ name: 'nextRound', params: {round: `runde-${round}` } } ">
-            <button @click="goToNextRound" class="pageButton">NEXT</button>
+            <button @click="goToNextRound" class="pageButton">NESTE</button>
         </RouterLink>
     </div>
 </template>
