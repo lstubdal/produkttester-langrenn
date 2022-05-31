@@ -11,7 +11,9 @@ import Date from './views/Date.vue';
 import NextRound from './components/NextRound.vue';
 import Results from './views/Results.vue';
 
-/* Handle if dynamic routes fail, or user types in wrong page/typos */
+/* Handle if routes fail, or user types in wrong page/typos
+	bugFix => not handleling all dynamic routes
+*/
 import PageNotFound from './views/PageNotFound.vue';
 
 export default [
@@ -64,7 +66,7 @@ export default [
 	},
 	{
 		name: 'test',
-		path: '/finn-test/:testSlug',
+		path: '/finn-test/test/:testSlug',
 		component: Test
 	},
 	{
@@ -73,4 +75,6 @@ export default [
 		component: PageNotFound
 	}	
 ];
+
+
 

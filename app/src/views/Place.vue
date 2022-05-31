@@ -43,6 +43,23 @@
         data() {
             return {
                 inputPlace: '',
+                newSlug: ''
+            }
+        },
+
+        watch: {
+            slug(newSlug) {
+                this.checkSlugExists(newSlug);
+                
+                if (this.newSlug !== newSlug) {
+                    this.$router.push({ name: 'pageNotFound', params: { catchAll: '/finn-test/test/:catchAll(.*)' } })
+                }         
+            }
+        },
+
+        computed: {
+            slug() {
+                return this.$route.params.testSlug
             }
         },
 
@@ -54,7 +71,6 @@
 
         methods: {
             filterTests() {
-                console.log('check')
                 let testView = document.querySelectorAll('.allTests__names');
                 
                 // hide tests that don't contain any char from users input
@@ -65,6 +81,14 @@
                         testView[index].style.display = 'none';
                     }
                 }
+            },
+
+            checkSlugExists(newSlug) {
+                this.tests.forEach(test => {
+                    if (newSlug === test.slug.current) {
+                        return this.newSlug = newSlug
+                    }
+                })
             }
         }
     }
