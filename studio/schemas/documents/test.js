@@ -106,7 +106,7 @@ export default {
                 {   
                     title: 'Skipar',
                     name: 'skipair',
-                    type: 'object', // object instead of reference bc different each test
+                    type: 'object', // object instead of reference to skipair document because the product is different for each tests
                     fields: [
                         {
                             title: 'Produkt',
