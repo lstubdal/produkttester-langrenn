@@ -92,9 +92,10 @@
     import Header from '../components/Header.vue';
     import sanityMixin from '../mixins/sanityMixin.js';
     import testMixin from '../mixins/testMixin.js';
+    import validationMixin from '../mixins/validationMixin.js';
 
     export default {
-        mixins: [sanityMixin, testMixin],
+        mixins: [sanityMixin, testMixin, validationMixin],
 
         data() {
             return {

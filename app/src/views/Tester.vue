@@ -35,10 +35,11 @@
 
     import sanityMixin from '../mixins/sanityMixin.js';
     import testMixin from '../mixins/testMixin.js';
+    import validationMixin from '../mixins/validationMixin.js'
     import query from '../groq/currentTest.groq?raw';
 
     export default {
-      mixins: [sanityMixin, testMixin],
+      mixins: [sanityMixin, testMixin, validationMixin],
 
       async created() {
        await this.sanityFetchTest(query); // fetch current test
@@ -81,6 +82,7 @@
 
 <style>
   .tester {
+    height: 100%;
     display: flex;
     flex-direction: column;
     font-family: var(--main-font);

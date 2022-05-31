@@ -22,9 +22,10 @@
     import Banner from '../components/Banner.vue';
     import SkipairsHeadline from '../components/SkipairsHeadline.vue';
     import testMixin from '../mixins/testMixin.js';
+    import validationMixin from '../mixins/validationMixin.js';
 
     export default {
-        mixins: [testMixin],
+        mixins: [testMixin, validationMixin],
 
         created() {
             this.skipairs = this.nextRound; // for v-model
