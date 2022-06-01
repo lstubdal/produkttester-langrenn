@@ -14,8 +14,6 @@ export default {
     },
 
     mutations: {
-        
-
         addTestId(state, id) {
             state.testId = id;
         }

@@ -8,7 +8,7 @@
             <span class="results__headline-text ">Result</span>
         </div>
 
-        <div class="results__result" v-for="pair in results">
+        <div class="results__result" v-for="pair in totalResults">
             <span :class="`results__result-text ${pair.result === 0 ? 'results__result-text--winner' : ''}`">{{ pair._key }}</span>
             <span class="results__result-text--large" :class="`results__result-text ${pair.result === 0 ? 'results__result-text--winner' : ''}`">{{ pair.product }}</span>
             <span :class="`results__result-text ${pair.result === 0 ? 'results__result-text--winner' : ''}`">{{ pair.result }}</span>
@@ -33,33 +33,26 @@
     export default {
         mixins: [sanityMixin],
 
-        async created() {
-            if (this.results) {
-                this.sortResultsASC(); // winner skipair first
-            } 
-            await this.sanityFetchTest(query); // fetch current test information
-        },
-
-        watch: {
-            updated() {
-                // Send user back to frontpage if no interaction within timespan
-                if (!this.goBackClicked && this.updated) {
-                    setTimeout(() => {
-                        this.$router.push({ name: 'home' })
-                    }, 5000) 
-                } else {
-                    if (this.goBackClicked && this.updated) {
-                        return 
-                    }
-                }
-             }
-        
-        },
-
         data() {
             return {
+                totalResults: [],
                 updated: false,
-                goBackClicked: false,
+                goBackClicked: false
+            }
+        },
+
+        async created() {
+            await this.sanityFetchTest(query); // fetch current information about test
+
+            if (this.results !== null) {
+                this.totalResults = this.results;
+                this.sortResultsASC(); 
+                console.log('ikke null', this.totalResults)
+        
+            } else {
+                // if page reloaded, get results from local storage
+                this.totalResults = JSON.parse(window.localStorage.getItem('totalResults')); 
+                this.sortResultsASC();
             }
         },
 
@@ -86,6 +79,7 @@
         },
 
         methods: {
+            // sort winnerskipairs shows first
             sortResultsASC() {
                 const asc = 1
                 const compare = (current, next) => {
@@ -97,7 +91,7 @@
                         return 0
                     }
                 }
-                return this.results.sort((current, next) => compare(current, next) * asc)
+                return this.totalResults.sort((current, next) => compare(current, next) * asc)
             },
 
             formateToSanity() {
@@ -126,10 +120,24 @@
                     this.formateToSanity(), 
                     this.tests.slug.current
                 );
-
                 this.updated = true;
             }
-        }
+        },
+
+         watch: {
+            updated() {
+                // Send user back to frontpage if no interaction within timespan
+                if (!this.goBackClicked && this.updated) {
+                    setTimeout(() => {
+                        this.$router.push({ name: 'home' })
+                    }, 5000) 
+                } else {
+                    if (this.goBackClicked && this.updated) {
+                        return 
+                    }
+                }
+            }
+        },
     }
 </script>
 
