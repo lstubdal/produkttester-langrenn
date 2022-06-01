@@ -1,11 +1,11 @@
 <template>
   <LoadingScreen v-if="loading" />
-  <div v-else class="tester">
-    <Header  :page="'tester'" />
+  <div v-else :class="`tester ${tests.addedSkipairs.length === 8 ? 'tester--large' : ''}`" >
+    <Header :page="'tester'" />
     <Information :test="tests" :page="'tester'" />
     <RouterView /> <!-- to render child views of tester -->
 
-      <!-- tester input -->
+      <!-- input from tester -->
      <section v-if="$route.name === 'tester'" class="tester__skipairs">
         <Banner :bannerTitle="'TEST 1'" />
 
@@ -43,8 +43,10 @@
 
       async created() {
        await this.sanityFetchTest(query); // fetch current test
-       this.$store.dispatch('setTestId', this.tests._id)
-       this.skipairs = this.splitIntoPairs(this.tests.addedSkipairs);
+       this.$store.dispatch('setTestId', this.tests._id) // store test id
+       console.log(this.tests.addedSkipairs.length);
+
+       this.skipairs = this.splitIntoPairs(this.tests.addedSkipairs); // create skipairs testingpairs for view
       },
 
       data() {
@@ -76,18 +78,29 @@
             }
           }
         } 
+      },
+
+      computed: {
+        numberOfSkipairs() {
+          return this.$store.getters.getNumberOfSkipairs;
+        }
       }
     }
 </script>
 
 <style>
   .tester {
-    height: 100%;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     font-family: var(--main-font);
     color: var(--main-color);
     background-image: url(/images/background.png);
+  }
+
+  /* if many testing pairs */
+  .tester--large {
+    height: 200vh;
   }
 
   .tester__header {
