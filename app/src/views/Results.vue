@@ -1,13 +1,14 @@
 <template>
     <div v-if="!updated" class="results">
         <Banner :bannerTitle="'RESULTATER'" />
+
         <div class="results__headline">
             <span class="results__headline-text ">Par</span>
             <span class="results__headline-text results__headline-text--large">Product</span>
             <span class="results__headline-text ">Result</span>
         </div>
 
-        <div class="results_result" v-for="pair in results">
+        <div class="results__result" v-for="pair in results">
             <span :class="`results__result-text ${pair.result === 0 ? 'results__result-text--winner' : ''}`">{{ pair._key }}</span>
             <span class="results__result-text--large" :class="`results__result-text ${pair.result === 0 ? 'results__result-text--winner' : ''}`">{{ pair.product }}</span>
             <span :class="`results__result-text ${pair.result === 0 ? 'results__result-text--winner' : ''}`">{{ pair.result }}</span>
@@ -142,6 +143,10 @@
         font-family: var(--main-font);
     }
 
+    .results__result, .results__headline {
+        width: 40%;
+    }
+
     .results__headline-text, .results__result-text {
         font-size: 1.5em;
         color: var(--light);
@@ -152,7 +157,7 @@
     }
 
     .results__headline {
-        margin: var(--margin-large) 0% var(--margin-medium) 0%;
+        margin: var(--margin-medium) var(--margin-large);
     }
 
     .results__headline-text--large {
@@ -160,12 +165,11 @@
     }
 
     .results__result-text--large {
-        min-width: 110px;
-        padding: 5px var(--padding-xlarge)
+        min-width: 120px;
+        padding: 5px var(--padding-large)
     }
 
     .results__headline, .results__result {
-        width: 30%;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -174,7 +178,7 @@
     .results__result-text {
         color: var(--main-color);
         background-color: var(--light);
-        margin: 0.5% 0%;
+        margin: 0.5% 2%;
         min-width: 80px;
         text-align: center;
     }
@@ -190,5 +194,20 @@
     .pageButton--results {
         margin: var(--margin-large);
     }
+
+    @media screen and (max-width: 800px) {
+        .results {
+            height: 100vh;
+        }
+        .results__result, .results__headline {
+            min-width: 100%;
+            justify-content: space-between;
+            margin: 0% var(--margin-large)
+        }
+        .results__headline-text {
+            margin: var(--margin-large) var(--margin-small) var(--margin-medium) var(--margin-small);
+            font-size: 1.3em;
+        }
+    } 
 
 </style>
