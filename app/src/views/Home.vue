@@ -93,7 +93,7 @@
                 // switch backgroundImage every 4th second
                 setInterval(() => {
                     this.backgroundImageUrl = this.backgroundImages[index].urls.regular
-                    if (index <= this.backgroundImages.length-1) {
+                    if (index < this.backgroundImages.length-1) {
                         index +=1;
                     } else {
                         index = 0
