@@ -37,6 +37,7 @@
         mixins: [sanityMixin, testMixin],
 
         async created() {
+            // fetch all tests for filter search
             await this.sanityFetchTest(allTests);
         },
 

@@ -67,17 +67,20 @@
                 const parsedMin = parseInt(this.inputMinimum);
                 const parsedMax = parseInt(this.inputMaximum);
 
+                // fetch tests with users temperature range
                 await this.sanityFetchTest(temperatureQuery, { 
                     min: parsedMin,
                     max: parsedMax
                 })
-
+                
+                // display error if no tests found
                 const errorView = document.querySelector('.error');
                 if (this.tests.length === 0) {
                     errorView.innerText = `Fant ingen mellom ${parsedMin} og ${parsedMax} grader. Prøv igjen...`;
                     errorView.style.display = 'block';
                 }
 
+                // handle input error
                 if (parsedMin > parsedMax) {
                     errorView.innerText = "Obs, 'fra-verdi' kan ikke være større enn 'til-verdi'";
                     errorView.style.display = 'block';

@@ -28,7 +28,9 @@
         mixins: [testMixin, validationMixin],
 
         created() {
-            this.skipairs = this.nextRound; // for v-model
+            if (this.nextRound !== 'undefined') {
+                this.skipairs = this.nextRound; // for v-model
+            } 
         },
 
         data(){
@@ -38,6 +40,7 @@
             }
         },
 
+        // before each round is finished
         beforeRouteUpdate(to, from, next) {
             this.findWinners(this.skipairs);
             this.$store.dispatch('increaseRoundIndex');

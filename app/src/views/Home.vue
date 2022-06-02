@@ -43,7 +43,7 @@
         },
 
         mounted() {
-            /* this.displayNextBackgroundImage() */
+            this.displayNextBackgroundImage()
         },
 
         methods: {
@@ -66,12 +66,13 @@
             },
 
             async handleFetchResponse(response) {
+                // use fetched images for background if fetch OK
                 if ( response.status >= 200 && response.status < 300) {
                     const images = await response.json();
-
                     this.backgroundImages = images;
                     this.backgroundImageUrl = this.backgroundImages[0].urls.regular // default background
 
+                // display error message to user if not
                 } else {
                     if(response.status === 404) {
                         throw new Error('Url not found');
@@ -88,14 +89,14 @@
 
             displayNextBackgroundImage() {
                 let index = 1;
+
+                // switch backgroundImage every 4th second
                 setInterval(() => {
                     this.backgroundImageUrl = this.backgroundImages[index].urls.regular
                     if (index <= this.backgroundImages.length-1) {
                         index +=1;
-                        console.log(index)
                     } else {
                         index = 0
-                        console.log('else', index)
                     }
                 }, 4000);
             }

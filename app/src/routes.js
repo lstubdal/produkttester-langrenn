@@ -12,8 +12,7 @@ import NextRound from './components/NextRound.vue';
 import Results from './views/Results.vue';
 
 /* Handle if routes fail, or user types in wrong page/typos
-	bugFix => not handleling all dynamic routes
-*/
+	bugFix => not handleling all dynamic routes */
 import PageNotFound from './views/PageNotFound.vue';
 
 export default [

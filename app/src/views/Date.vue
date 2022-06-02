@@ -37,12 +37,13 @@
 
     methods: {
       async findTest() {
+        // fetch test with matching input date 
         await this.sanityFetchTest(dateQuery, { date: this.inputDate })
 
+        // if no test exists with current date
         const errorView = document.querySelector('.errorDate');
         errorView.innerText = ''; // reset error message for next search
         if (this.tests.length === 0) {
-          console.log('ingen test');
           errorView.innerText = `Fant ingen test fra ${this.inputDate}. Prøv igjen...`;
         }
       }  

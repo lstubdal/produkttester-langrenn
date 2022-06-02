@@ -47,7 +47,6 @@
             if (this.results !== null) {
                 this.totalResults = this.results;
                 this.sortResultsASC(); 
-                console.log('ikke null', this.totalResults)
         
             } else {
                 // if page reloaded, get results from local storage

@@ -104,7 +104,7 @@
                 date: '',
                 temperature: null,
                 skiTypes: ['Klassisk', 'Skøyting', 'Skibytte'],
-                selectNumberOfPairs: [2,4,6,8,10,12],
+                selectNumberOfPairs: [2,4,8],
                 selectedTestType: '',
                 inTrack: '',
                 outsideTrack: '',
@@ -166,8 +166,8 @@
                         _key: key 
                     }
                     addedSkipairs.push(skipairWithProduct)
-                    });
-                    return addedSkipairs
+                });
+                return addedSkipairs
             },
 
             createSlug() {
@@ -179,18 +179,8 @@
                 return parseInt(this.numberOfpairs)
             },
 
-            validationTemperature() {
-                const inputField = document.querySelector('.errorTemperature');
-                if (this.temperature === null) {
-                    inputField.innerText = 'Mangler temperatur!';
-                    inputField.style.display = 'block';
-                    return false
-                } 
-                inputField.style.display = 'none'; 
-                return true
-            },
-
             createTestSanity() {
+                // if all inputs are filled
                 if (this.validationTextInput(this.name, 'errorName', 'Mangler navn!' ) 
                     && this.validationTextInput(this.place, 'errorPlace', 'Mangler sted!') 
                     && this.validationTextInput(this.date, 'errorDate', 'Mangler dato!') 
@@ -198,9 +188,7 @@
                     && this.validationSkiType()
                     && this.validationSkipairs()) {
 
-                        console.log(this.createSlug())
-                        
-                    /* create new testdocument to sanity */
+                    // create new testdocument to sanity 
                     this.createOrUpdateTest(
                         this.testId,
                         this.name, 
@@ -262,7 +250,18 @@
                 inputFieldNumber.style.display = 'none';
                 inputFieldProduct.style.display = 'none';
                 return true
-            }
+            },
+
+            validationTemperature() {
+                const inputField = document.querySelector('.errorTemperature');
+                if (this.temperature === null) {
+                    inputField.innerText = 'Mangler temperatur!';
+                    inputField.style.display = 'block';
+                    return false
+                } 
+                inputField.style.display = 'none'; 
+                return true
+            },
         }
     }
 </script>

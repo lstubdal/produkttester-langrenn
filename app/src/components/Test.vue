@@ -41,15 +41,15 @@
     import Header from '../components/Header.vue';
     import Information from '../components/Information.vue';
     import Banner from '../components/Banner.vue';
-    import sanityMixin from '../mixins/sanityMixin';
+    import sanityMixin from '../mixins/sanityMixin.js';
+    import testMixin from '../mixins/testMixin.js'
     import query from '../groq/previousTest.groq?raw';
 
     export default {
-        mixins: [sanityMixin],
+        mixins: [sanityMixin, testMixin],
 
         async created() {
-            console.log(this.$route.params.testSlug);
-
+            // fetch test with matching slug
             await this.sanityFetchTest(query, {
                 slug: this.$route.params.testSlug
             });
@@ -71,6 +71,10 @@
                 } else {
                    return 'Skibytte'
                 }
+            },
+
+            slug() {
+                return this.$route.params.testSlug;
             }
         }
     }

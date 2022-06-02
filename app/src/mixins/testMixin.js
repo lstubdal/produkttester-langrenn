@@ -19,6 +19,7 @@ export default {
             const currentWinners = []
             if (skiArray.length === 1) {
                 this.$router.push({ name: 'results', params: 'results' }) // go to results after last round or if only 2 pairs tested
+                
             } else {
                 skiArray.forEach(pairs => {
                     const [first, second] = pairs // crate pair variable
@@ -29,8 +30,8 @@ export default {
                 })
             }
 
-            this.updateResultsStore(skiArray);
-            this.$store.dispatch('updateNextRound', this.splitIntoPairs(currentWinners)); // save winners from current round in store to access to next round, and split into pairs          
+            this.updateResultsStore(skiArray); // including local storage
+            this.$store.dispatch('updateNextRound', this.splitIntoPairs(currentWinners)); // save winners from current round in store to access to next round, and split into pairs & local Storage   
         },
 
         updateResultsStore(skiArray) {

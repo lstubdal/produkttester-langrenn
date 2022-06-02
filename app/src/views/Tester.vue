@@ -42,11 +42,9 @@
       mixins: [sanityMixin, testMixin, validationMixin],
 
       async created() {
-       await this.sanityFetchTest(query); // fetch current test
-       this.$store.dispatch('setTestId', this.tests._id) // store test id
-       console.log(this.tests.addedSkipairs.length);
-
-       this.skipairs = this.splitIntoPairs(this.tests.addedSkipairs); // create skipairs testingpairs for view
+        await this.sanityFetchTest(query); // fetch current test
+        this.$store.dispatch('setTestId', this.tests._id) // store test id
+        this.skipairs = this.splitIntoPairs(this.tests.addedSkipairs); // create skipairs testingpairs for view
       },
 
       data() {
