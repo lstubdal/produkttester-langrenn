@@ -45,6 +45,7 @@
         errorView.innerText = ''; // reset error message for next search
         if (this.tests.length === 0) {
           errorView.innerText = `Fant ingen test fra ${this.inputDate}. Prøv igjen...`;
+          errorView.style.display = 'block';
         }
       }  
     }
@@ -86,6 +87,7 @@
   }
 
   .errorDate {
+    display: none;
     color: var(--second-color);
   }
 </style>
