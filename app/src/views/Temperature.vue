@@ -22,7 +22,7 @@
         </section>
 
         <div class="error"></div>
-        <div class="temperature__test" v-for="t in test">
+        <div class="temperature__test" v-for="t in tests">
             <RouterLink :to="{name: 'test', params: { testSlug: t.slug.current } }" class="tests__test-name">{{ t.name }}</RouterLink>
         </div>
     </div>
@@ -137,6 +137,11 @@
         border-bottom: 1px solid var(--second-color);
         padding: 0.5%;
         margin: var(--margin-small);
+    }
+
+    .tests__test-name {
+        color: var(--second-color);
+        text-decoration: none;
     }
 
     .error {
