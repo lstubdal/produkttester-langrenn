@@ -71,14 +71,22 @@ export default {
                                             }
                                         }
                                     } else {
-                                        // add difference to all skiapirs above looserkey
-                                        for (let index = looserKey; index <= state.totalResults.length; index++) {
+                                        // add difference to all skiapirs below? looserkey
+                                        for (let index = midpoint; index <= state.totalResults.length; index++) {
+                                            console.log('looserkey: ', looserKey)
+                                            console.log('results before: ', state.totalResults[index].result);
+                                            if (index+1 == looserKey) {
+                                                console.log('index: ', index, 'looserkey: ', looserKey);
+                                                index += 1 // skip current pair because value is added in template
+                                                console.log('index after', index);
+                                            }
                                             state.totalResults[index].result += pair.result
+                                            console.log('results after: ', state.totalResults[index].result);
                                         } 
                                     }
 
                                 } else {
-                                    // if looserpair key is 1, find midpoint of array and difference to the skipairs half of the pairs in array with lowst key
+                                    // if looserpair key is 1, find midpoint of array and difference to the skipairs half of the pairs in array with lowest key
                                     if (looserKey === 1) {
                                         for (let index = midpoint; index <= state.totalResults.length; index--) {
                                             if (index === 1) { 
@@ -104,10 +112,9 @@ export default {
                     }
                 }
             }
-
-             
+  
             /*  if key is even, add differnece to skiapir with key -1 
-                f key is odd, add differnece to skiapir with key +1 */
+                if key is odd, add differnece to skiapir with key +1 */
             function isEven(key) {
                 return key % 2 === 0;
             }
