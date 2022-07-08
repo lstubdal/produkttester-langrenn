@@ -61,28 +61,11 @@ export default {
 
                                 // if key is larger than lowest key, add difference to skiapirs with larger key
                                 if (looserKey !== lowestKey) {
-
-                                    // if looserkey is the highest key (selected number of pairs is 8 or 4)
-                                    if (looserKey === 8 || looserKey === 4) {
-                                        for (let index = midpoint; index <= state.totalResults.length; index++) {
-                                            state.totalResults[index].result += pair.result;
-                                            if (index === 6 || index === 2) {
-                                                return
-                                            }
+                                    for (let index = midpoint; index <= state.totalResults.length; index++) {
+                                        if (index+1 == looserKey) {
+                                            index +=1; // skip current pair because value is added in template
                                         }
-                                    } else {
-                                        // add difference to all skiapirs below? looserkey
-                                        for (let index = midpoint; index <= state.totalResults.length; index++) {
-                                            console.log('looserkey: ', looserKey)
-                                            console.log('results before: ', state.totalResults[index].result);
-                                            if (index+1 == looserKey) {
-                                                console.log('index: ', index, 'looserkey: ', looserKey);
-                                                index += 1 // skip current pair because value is added in template
-                                                console.log('index after', index);
-                                            }
-                                            state.totalResults[index].result += pair.result
-                                            console.log('results after: ', state.totalResults[index].result);
-                                        } 
+                                        state.totalResults[index].result += pair.result
                                     }
 
                                 } else {
