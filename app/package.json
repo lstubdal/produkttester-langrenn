@@ -20,6 +20,9 @@
   "homepage": "https://github.com/lstubdal/vue_boilerplate#readme",
   "dependencies": {
     "@sanity/client": "^3.3.0",
+    "eslint": "^8.14.0",
+    "glob-parent": "^6.0.2",
+    "requires": "^1.0.2",
     "vue": "^3.2.29",
     "vue-router": "^4.0.12",
     "vuex": "^4.0.2"
