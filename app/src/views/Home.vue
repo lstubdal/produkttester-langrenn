@@ -21,6 +21,10 @@
                     Opprett ny test
                 </button>
             </RouterLink>
+
+            <RouterLink :to="{ name: 'tester' }" class="home__link--current">
+                <p>Gå til sist opprettet test</p>
+            </RouterLink>
         </section>
     </div>
 </template>
@@ -150,6 +154,10 @@
 
     .home__link {
         text-decoration: none;
+    }
+
+    .home__link--current {
+        color: var(--main-color);
     }
 
     .home__tests, .home__newTest {
