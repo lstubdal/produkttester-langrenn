@@ -38,12 +38,12 @@
         },
 
         async created() {
-            this.fetchBackgroundImage();
+            /* this.fetchBackgroundImage(); */
             document.title = 'Produkttesteren | Hjem';
         },
 
         mounted() {
-            this.displayNextBackgroundImage()
+            /* this.displayNextBackgroundImage() */
         },
 
         methods: {
