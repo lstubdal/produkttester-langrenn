@@ -1,7 +1,8 @@
 <template>
     <div v-if="error">Ups, noe gikk galt! {{ error }}</div>
 
-    <div v-if="!error" class="home" :style="{ backgroundImage: `url(${ backgroundImageUrl })` }">
+    <!-- <div v-if="!error" class="home" :style="{ backgroundImage: `url(${ backgroundImageUrl })` }"></div> -->
+    <div v-if="!error" class="home">
         <section class="home__headline">
             <h1 class="home__headline-title">{{ title }}</h1>
             <hr class="home__headline-seperator">
@@ -117,6 +118,7 @@
         justify-content: space-around;
         align-items: center;
         background-size: cover;
+        background-image: url("/images/frontpage.jpg");
         font-family: var(--main-font);
     }
 
@@ -157,7 +159,7 @@
     }
 
     .home__link--current {
-        color: var(--main-color);
+        color: var(--light);
     }
 
     .home__tests, .home__newTest {
