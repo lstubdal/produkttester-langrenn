@@ -30,11 +30,10 @@
     import Banner from '../components/Banner.vue';
     import LoadingScreen from '../components/LoadingScreen.vue';
     import sanityMixin from '../mixins/sanityMixin.js';
-    import testMixin from '../mixins/testMixin.js'; 
     import allTests from '../groq/allTests.groq?raw'; // ?raw -> read file as it is
 
     export default {
-        mixins: [sanityMixin, testMixin],
+        mixins: [sanityMixin],
 
         async created() {
             // fetch all tests for filter search
