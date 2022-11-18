@@ -20,7 +20,7 @@
         </div>
         
         <div class="inputError errorTestInput"></div>
-        <button @click="nextRound" class="pageButton">NEXT</button>
+        <button @click="nextRound" class="pageButton">NESTE</button>
     </section>
   </div>
 </template>
@@ -42,8 +42,8 @@
       mixins: [sanityMixin, testMixin, validationMixin],
 
       async created() {
-        await this.sanityFetchTest(query); // fetch current test
-        this.$store.dispatch('setTestId', this.tests._id) // store test id
+        await this.sanityFetchTest(query); // fetch current test (on last index)
+        this.$store.dispatch('setTestId', this.tests._id) // store test id after fetching
         this.skipairs = this.splitIntoPairs(this.tests.addedSkipairs); // create skipairs testingpairs for view
       },
 

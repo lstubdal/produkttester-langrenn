@@ -190,7 +190,7 @@
 
                     // create new testdocument to sanity 
                     this.createOrUpdateTest(
-                        this.testId,
+                        this.testId, /* empty placeholder */
                         this.name, 
                         this.place, 
                         this.date,
